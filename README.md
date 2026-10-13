@@ -19,9 +19,10 @@ An AI-powered ambulance routing research platform using JEPA-style predictive re
 - **5 routing algorithms**: Shortest Distance, Current Traffic, Predicted Traffic, Uncertainty-Aware, Quantum-Inspired (SA)
 - **4 forecasting models**: Persistence, Historical Average, LSTM (with MC-Dropout uncertainty), JEPA-Traffic
 - **JEPA-style representation learning**: online/target encoder with EMA updates
-- **6-page Streamlit dashboard**: Command Center, Live Map, Route Comparison, AI Lab, Experiments, System Status
+- **7-page Streamlit dashboard**: Command Center, Live Map, Route Comparison, AI Lab, Experiments, System Status, and Google Maps Integration
+- **Google Maps Platform integration**: Live Routes API v2 navigation and Maps JS API visualization with separate keys, rate limiting, and offline fallback
 - **FastAPI REST backend** with full endpoint coverage
-- **33 automated tests** — all passing
+- **129 automated tests** — all passing
 
 ---
 
@@ -106,8 +107,23 @@ surakshit-bharat-q-jepa/
 | POST | `/simulation/incident` | Add incident |
 | POST | `/experiments/run` | Run routing experiment |
 | GET | `/metrics` | Forecasting metrics |
+| GET | `/integrations/google/status` | Google Maps Platform configuration and offline status |
+| POST | `/integrations/google/routes` | Compute traffic-aware routes via Google Routes API v2 |
 
 Full API docs at `http://localhost:8000/docs` when backend is running.
+
+---
+
+## Google Maps Platform Integration
+
+Surakshit Bharat Q-JEPA includes optional Google Maps Platform integration for real-world geographic route visualization and commercial traffic-aware baseline comparisons.
+
+- **Two-Key Architecture**:
+  - `GOOGLE_MAPS_SERVER_API_KEY`: Used strictly by FastAPI backend for the Routes API.
+  - `GOOGLE_MAPS_BROWSER_API_KEY`: Restricted by HTTP referrer, used only by Streamlit for Maps JavaScript API tiles.
+- **Offline / Fallback Resilience**: The entire application and test suite execute without internet access or API credentials. Unconfigured instances gracefully present an offline banner.
+- **ToS & Intellectual Property Boundary**: In compliance with Google Maps Platform Terms of Service, route data (polylines, durations, distances) is **strictly display-only** and is never ingested into datasets or used to train or evaluate `JEPAGraph-FM`.
+- **Setup Guide**: See [docs/GOOGLE_MAPS_SETUP.md](docs/GOOGLE_MAPS_SETUP.md) for step-by-step GCP configuration instructions.
 
 ---
 

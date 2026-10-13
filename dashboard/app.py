@@ -32,6 +32,7 @@ from src.routing.shortest_path import compare_all_routes, RouterType
 from src.common.config import config, abs_path
 from dashboard.components.sota_tab import render_sota_comparison_tab
 from dashboard.components.foundation_tab import render_foundation_lab_tab
+from dashboard.components.google_maps_tab import render_google_maps_tab
 
 logger = get_logger(__name__)
 
@@ -175,6 +176,7 @@ with st.sidebar:
             "🔬 AI Research Lab",
             "⚗️ Experiment Center",
             "⚙️ System & Data",
+            "🌍 Google Maps",
         ],
         label_visibility="collapsed",
     )
@@ -1435,3 +1437,10 @@ streamlit run dashboard/app.py
 # Run tests
 python -m pytest tests/ -v
     """, language="bash")
+
+
+# ─────────────────────────────────────────────────
+# PAGE 7: Google Maps Integration
+# ─────────────────────────────────────────────────
+elif page == "🌍 Google Maps":
+    render_google_maps_tab()

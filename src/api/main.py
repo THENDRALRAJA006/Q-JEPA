@@ -24,6 +24,7 @@ from src.routing.shortest_path import (
 )
 from src.common.config import config, abs_path
 from src.common.logging import get_logger
+from src.integrations.google_maps_router import router as google_maps_router
 
 logger = get_logger(__name__)
 
@@ -37,6 +38,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
 )
+app.include_router(google_maps_router)
 
 # ─── Global simulation state ───────────────────────────────
 _network: Optional[RoadNetwork] = None

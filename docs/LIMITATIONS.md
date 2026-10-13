@@ -47,4 +47,17 @@
 14. **Multimodal Physical Heterogeneity**:  
     Traffic flow (veh/5min) and speed (mph) represent fundamentally distinct physical properties. While `JEPAGraph-FM` embeds both via a unified spatiotemporal backbone, decoders and train-only normalizations remain strictly variable-specific to prevent invalid cross-domain unit mixing.
 
+---
+
+## 5. Google Maps Platform Integration Boundaries
+
+15. **Strict Display-Only Usage & ML Data Prohibition**:  
+    In accordance with Google Maps Platform Terms of Service, all data retrieved via Google Routes API (durations, traffic-aware travel times, route polylines, step distances) is strictly restricted to interactive visualization and operator reference. Google Maps data is **never** stored, archived in training sets, used for synthetic supervision, or employed to pretrain, fine-tune, or benchmark `JEPAGraph-FM` or any other ML model.
+16. **Separation from Simulated Algorithmic Benchmarks**:  
+    The JEPAGraph routing suite evaluates algorithms (Time-Dependent Dijkstra, Uncertainty-Aware A*, and quantum-inspired annealing) on controlled synthetic or open-data benchmark topologies. Google Maps routes represent live commercial routing over physical street networks and are displayed side-by-side for human situational awareness, not as an apples-to-apples benchmark baseline.
+17. **Operational Dispatch Limitations**:  
+    Google Maps routing does not account for municipal Emergency Vehicle Preemption (EVP), siren right-of-way, dedicated bus/emergency lanes, or dynamic hospital emergency department triage capacity. It cannot be used as an automated dispatch controller.
+18. **Attribution & Rendering**:  
+    All Google Maps visual representations must retain the official `© Google` copyright notice and adhere to Google Maps Platform brand guidelines.
+
 
