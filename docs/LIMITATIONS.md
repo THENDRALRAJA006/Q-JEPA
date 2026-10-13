@@ -36,15 +36,21 @@
 
 ---
 
-## 4. Foundation Model V2.0 Boundaries & Research Caveats
+## 4. Foundation Model V3.1 Boundaries & Research Caveats
 
 11. **Hardware Profile & Scale (CPU vs CUDA GPU)**:  
-    Local execution is constrained to a Windows 64-bit CPU environment (16 cores, ~2.5 GB free RAM, PyTorch CPU). Consequently, multi-dataset pretraining and downstream transfer benchmarks were verified using the **Tiny** configuration (34,851 parameters, 2 layers, hidden dimension 32) and budgeted temporal slices. Production-scale configurations (**Base**: 64-dim, 4 layers, ~110k parameters; **Large**: 128-dim, 6 layers, ~385k parameters) are fully implemented and configured (`configs/pretraining_base.yaml`, `configs/pretraining_large.yaml`), but require multi-GPU CUDA clusters with mixed precision (`torch.cuda.amp`) for multi-day convergence.
-12. **Dataset Licensing & Reuse Protocol**:  
-    METR-LA and PeMS benchmark datasets are distributed under Creative Commons Attribution 4.0 International (CC BY 4.0) and Caltrans open data terms. External Traffic4Cast datasets (IARAI) maintain distinct non-commercial research terms; researchers must independently verify redistribution and commercial applicability prior to downstream deployment.
-13. **Zero-Shot Transfer Boundaries**:  
-    Direct zero-shot transfer on unseen networks achieves **5.30 mph** at 15m without any target parameter updates. While competitive with supervised baselines like STGCN (5.24 mph), it is substantially improved by brief few-shot fine-tuning (3.81 mph). Zero-shot representations provide strong topological inductive biases, but network-specific speed limits and sensor geometries benefit from target calibration.
-14. **Multimodal Physical Heterogeneity**:  
+    Local execution is constrained to a Windows 64-bit CPU environment (16 logical threads, ~1.7 GB free RAM, PyTorch CPU). Consequently, multi-dataset pretraining and downstream transfer benchmarks were verified using the **Tiny/LODO** configuration (40,041 parameters, 2 layers, hidden dimension 32) and budgeted temporal slices. Production-scale configurations (**Base**: 64-dim, 4 layers, ~110k parameters; **Large**: 128-dim, 6 layers, ~385k parameters) are fully implemented and configured (`configs/pretraining_base.yaml`, `configs/pretraining_large.yaml`), but require multi-GPU CUDA clusters with mixed precision (`torch.cuda.amp`) for multi-day convergence across all 200,000+ timesteps.
+12. **Dataset Provenance & Real vs Procedural Fallbacks**:  
+    Authentic raw sensor files have been verified on disk for three benchmarks:
+    - `metr_la` (69.11 MB CSV, 207 sensors, speed)
+    - `pems04` (31.43 MB NPZ, 307 sensors, flow/speed)
+    - `pems08` (17.67 MB NPZ, 170 sensors, flow/speed)
+    The remaining datasets (`pems_bay`, `pems03`, `pems07`) have their raw Zenodo downloads blocked by HTTP 403 / IP restrictions and operate via procedural sinusoidal profiles. These procedural profiles are strictly isolated for local unit testing and are **never** claimed as empirical Caltrans ground truth or mixed into foundation pretraining in V3.1.
+13. **Leave-One-Dataset-Out (LODO) Zero-Shot Transfer Boundaries**:  
+    When pretraining strictly on `pems04` and `pems08` (with `metr_la` completely held out, `lodo_isolation_verified: true`), pure zero-shot transfer on METR-LA achieves **9.64 mph** at 15m without any target parameter updates. Unlike the previous V2.0 smoke run where target data had leaked into the source mixture, genuine LODO evaluation reveals that uncalibrated zero-shot prediction has higher error due to network-specific sensor geometries and speed limit differences. However, fine-tuning on just **1% target data (240 samples)** rapidly reduces error to **5.65 mph** (an **+18.2% gain** over training from scratch at 6.91 mph), and reaches **3.32 mph** at full budget.
+14. **Ambulance Routing Boundary Conditions**:  
+    Dynamic time-dependent forecasting does not uniformly outperform greedy current-traffic routing across all conditions. Under **stationary, steady-state congestion**, greedy routing is near-optimal (648.4s vs 654.4s, where predictive routing incurs a negligible 0.9% detour penalty). However, under **non-stationary congestion**—such as rush-hour queue formation or clearing bottlenecks—predictive routing delivers substantial physical gains, saving **99.7 seconds (+11.4% faster, reducing P90 delay by 396 seconds)** during rush-hour onset and **62.9 seconds (+8.3% faster)** during bottleneck clearance.
+15. **Multimodal Physical Heterogeneity**:  
     Traffic flow (veh/5min) and speed (mph) represent fundamentally distinct physical properties. While `JEPAGraph-FM` embeds both via a unified spatiotemporal backbone, decoders and train-only normalizations remain strictly variable-specific to prevent invalid cross-domain unit mixing.
 
 ---

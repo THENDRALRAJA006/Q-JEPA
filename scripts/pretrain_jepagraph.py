@@ -278,27 +278,49 @@ def pretrain(
 
     total_training_time = time.time() - t_start
 
-    # Serialize results to results/metrics/foundation_pretraining_results.json
+    # Compute checkpoint SHA-256 hash
+    ckpt_hash = None
+    if best_ckpt_path.exists():
+        import hashlib
+        sha = hashlib.sha256()
+        with open(best_ckpt_path, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                sha.update(chunk)
+        ckpt_hash = sha.hexdigest()
+
+    # Total optimizer steps
+    total_optimizer_steps = len(train_loader) * max_epochs
+
+    # Serialize results
     results_payload = {
         "model_scale": scale,
         "device": device_name,
+        "random_seed": 42,
         "parameter_counts": param_counts,
         "trained_epochs": max_epochs,
+        "total_optimizer_steps": total_optimizer_steps,
         "best_val_loss": best_val_loss,
         "total_training_seconds": round(total_training_time, 2),
         "checkpoint_path": str(best_ckpt_path),
+        "checkpoint_sha256": ckpt_hash,
         "mixture_datasets": mixture_datasets,
+        "dataset_sample_counts": train_loader.sizes,
         "loss_weights": obj_cfg_dict,
         "training_history": history,
     }
 
-    results_file = project_root / "results" / "metrics" / "foundation_pretraining_results.json"
-    results_file.parent.mkdir(parents=True, exist_ok=True)
-    with open(results_file, "w") as f:
-        json.dump(results_payload, f, indent=2)
+    # Save to V3.1 results and default metrics
+    for r_path in [
+        project_root / "results" / "metrics" / "v3_1" / f"foundation_pretrain_{Path(config_path).stem}.json",
+        project_root / "results" / "metrics" / "foundation_pretraining_results.json",
+    ]:
+        r_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(r_path, "w") as f:
+            json.dump(results_payload, f, indent=2)
 
     print("\n" + "=" * 80)
-    print(f"PRETRAINING FINISHED in {total_training_time:.1f}s. Results saved to {results_file}")
+    print(f"PRETRAINING FINISHED in {total_training_time:.1f}s. Checkpoint SHA-256: {ckpt_hash[:16]}...")
+    print(f"Results saved to results/metrics/v3_1/foundation_pretrain_{Path(config_path).stem}.json")
     print("=" * 80 + "\n")
     return results_payload
 

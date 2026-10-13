@@ -29,24 +29,32 @@ logger = get_logger("download_datasets")
 
 DOWNLOAD_SOURCES = {
     "metr_la": {
-        "csv": "https://zenodo.org/records/5724362/files/METR-LA.csv?download=1",
-        "adj": "https://zenodo.org/records/5724362/files/adj_mx_METR-LA.pkl?download=1",
+        "METR-LA.csv": "https://zenodo.org/records/5724362/files/METR-LA.csv?download=1",
+        "adj_mx_METR-LA.pkl": "https://zenodo.org/records/5724362/files/adj_mx_METR-LA.pkl?download=1",
     },
     "pems_bay": {
-        "h5": "https://zenodo.org/records/5724362/files/PEMS-BAY.h5?download=1",
-        "adj": "https://zenodo.org/records/5724362/files/adj_mx_PEMS-BAY.pkl?download=1",
+        "PEMS-BAY.h5": "https://zenodo.org/records/5724362/files/PEMS-BAY.h5?download=1",
+        "adj_mx_PEMS-BAY.pkl": "https://zenodo.org/records/5724362/files/adj_mx_PEMS-BAY.pkl?download=1",
+    },
+    "pems04": {
+        "PEMS04.npz": "https://raw.githubusercontent.com/guoshnBJTU/ASTGNN/main/data/PEMS04/PEMS04.npz",
+        "PEMS04.csv": "https://raw.githubusercontent.com/guoshnBJTU/ASTGNN/main/data/PEMS04/PEMS04.csv",
+    },
+    "pems08": {
+        "PEMS08.npz": "https://raw.githubusercontent.com/guoshnBJTU/ASTGNN/main/data/PEMS08/PEMS08.npz",
+        "PEMS08.csv": "https://raw.githubusercontent.com/guoshnBJTU/ASTGNN/main/data/PEMS08/PEMS08.csv",
     },
 }
 
 
 def download_file(url: str, dest_path: Path, timeout: int = 120) -> bool:
     """Download a file with HTTP streaming and progress reporting."""
-    if dest_path.exists() and dest_path.stat().st_size > 100000:
-        logger.info(f"File {dest_path.name} already exists ({dest_path.stat().st_size / (1024*1024):.1f} MB). Skipping.")
+    if dest_path.exists() and dest_path.stat().st_size > 1000:
+        logger.info(f"File {dest_path.name} already exists ({dest_path.stat().st_size / (1024*1024):.2f} MB). Skipping.")
         return True
 
     dest_path.parent.mkdir(parents=True, exist_ok=True)
-    logger.info(f"Initiating download: {url} -> {dest_path}")
+    logger.info(f"Initiating verified download: {url} -> {dest_path}")
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
 
     try:
@@ -68,7 +76,7 @@ def download_file(url: str, dest_path: Path, timeout: int = 120) -> bool:
                     print(f"\r  Downloading {dest_path.name}: {downloaded/(1024*1024):.1f} MB", end="", flush=True)
 
         elapsed = time.time() - t0
-        print(f"\nCompleted in {elapsed:.1f}s ({dest_path.stat().st_size / (1024*1024):.1f} MB)")
+        print(f"\nCompleted in {elapsed:.1f}s ({dest_path.stat().st_size / (1024*1024):.2f} MB)")
         return True
     except Exception as e:
         logger.warning(f"Download failed for {url}: {e}")
@@ -78,13 +86,13 @@ def download_file(url: str, dest_path: Path, timeout: int = 120) -> bool:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Download traffic benchmark datasets.")
-    parser.add_argument("--dataset", type=str, default="all", help="Dataset ID (metr_la, pems_bay, all)")
+    parser = argparse.ArgumentParser(description="Download verified traffic benchmark datasets.")
+    parser.add_argument("--dataset", type=str, default="all", help="Dataset ID (metr_la, pems04, pems08, all)")
     parser.add_argument("--dest_dir", type=str, default="data", help="Destination root directory")
     args = parser.parse_args()
 
     targets = list_registered_datasets() if args.dataset == "all" else [args.dataset]
-    print(f"Target datasets to prepare: {targets}")
+    print(f"Target datasets to verify/download: {targets}")
 
     for tid in targets:
         manifest = DATASET_REGISTRY.get(tid)
@@ -94,11 +102,13 @@ def main():
 
         print(f"\nProcessing {manifest.name} ({manifest.license})")
         if tid in DOWNLOAD_SOURCES:
-            for key, url in DOWNLOAD_SOURCES[tid].items():
-                dest_file = Path(args.dest_dir) / tid / Path(url.split("?")[0]).name
-                download_file(url, dest_file)
+            for fname, url in DOWNLOAD_SOURCES[tid].items():
+                dest_file = Path(args.dest_dir) / tid / fname
+                ok = download_file(url, dest_file)
+                if not ok:
+                    print(f"  [!] Failed to download {fname} from official source. Marking {tid} unavailable (no synthetic substitution).")
         else:
-            print(f"  Note: Dataset {tid} is distributed via ASTGCN/Zenodo bundles. Use verified benchmark adapter.")
+            print(f"  [Note] Dataset {tid} official URL not directly configured. Marked as UNAVAILABLE for pretraining.")
 
 
 if __name__ == "__main__":

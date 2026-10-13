@@ -174,10 +174,17 @@ class BaseTrafficAdapter(ABC):
         split: str = "train",
         stride: int = 1,
         subsample_ratio: float = 1.0,
+        exact_samples: Optional[int] = None,
         max_samples: Optional[int] = None,
+        seed: int = 42,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """
         Generate sliding window tensors for a split.
+
+        Guarantees:
+        - Exact budget counts calculated dynamically from total possible windows.
+        - Deterministic, properly nested subsets across budgets using seed-controlled ordering.
+        - Identical windows provided to pretrained and scratch models.
 
         Returns:
             - x: [M, T_in, N, 3] (normalized value, time-of-day, day-of-week)
@@ -211,17 +218,25 @@ class BaseTrafficAdapter(ABC):
                 f"window size {window_size}."
             )
 
-        if max_samples is not None and subsample_ratio < 1.0:
-            # Genuine scaling under budget cap:
-            num_target = min(total_possible, max(8, int(max_samples * subsample_ratio)))
+        # Dynamic sample calculation
+        if exact_samples is not None:
+            num_target = min(total_possible, max(1, exact_samples))
         elif subsample_ratio < 1.0:
-            num_target = max(8, int(total_possible * subsample_ratio))
-        elif max_samples is not None:
-            num_target = min(total_possible, max_samples)
+            # Consistent dynamic rounding: e.g. for 23,967 windows -> 1% is 240, 5% is 1198, etc.
+            num_target = min(total_possible, max(1, int(round(total_possible * subsample_ratio))))
         else:
             num_target = total_possible
 
-        indices = np.linspace(0, total_possible - 1, num_target, dtype=int)
+        # Explicit development/smoke-test capping (never silent)
+        if max_samples is not None:
+            num_target = min(num_target, max_samples)
+
+        # Deterministic, nested subset selection:
+        # Pre-shuffling with a fixed seed ensures that indices for smaller budgets
+        # are a STRICT prefix subset of indices for larger budgets.
+        rng = np.random.default_rng(seed)
+        perm = rng.permutation(total_possible)
+        indices = perm[:num_target]
 
         # Build circadian time indices (assuming 5-min intervals: 288 steps/day)
         steps_per_day = 288
@@ -395,6 +410,8 @@ class PEMS04Adapter(BaseTrafficAdapter):
     def load_data(self) -> Tuple[np.ndarray, np.ndarray, List[str]]:
         npz_path = self.data_dir / "PEMS04.npz"
         csv_adj = self.data_dir / "distance_PEMS04.csv"
+        if not csv_adj.exists():
+            csv_adj = self.data_dir / "PEMS04.csv"
 
         if npz_path.exists():
             try:
@@ -403,11 +420,14 @@ class PEMS04Adapter(BaseTrafficAdapter):
                 N = data.shape[1]
                 adj = _load_distance_csv_adj(csv_adj, N) if csv_adj.exists() else _create_spatial_line_adj(N)
                 sensors = [f"pems04_{i}" for i in range(N)]
+                self._is_real = True
+                logger.info(f"Loaded authentic physical PEMS04 dataset: {data.shape} ({N} sensors)")
                 return data, adj, sensors
             except Exception as e:
                 logger.warning(f"Error reading PEMS04 npz: {e}")
 
         logger.info(f"Generating verified PEMS04 flow benchmark profile (307 sensors, flow veh/5min).")
+        self._is_real = False
         return _generate_caltrans_benchmark_profile(
             num_nodes=self.manifest.num_nodes,
             num_timesteps=self.manifest.num_timesteps_expected,
@@ -428,6 +448,8 @@ class PEMS07Adapter(BaseTrafficAdapter):
     def load_data(self) -> Tuple[np.ndarray, np.ndarray, List[str]]:
         npz_path = self.data_dir / "PEMS07.npz"
         csv_adj = self.data_dir / "distance_PEMS07.csv"
+        if not csv_adj.exists():
+            csv_adj = self.data_dir / "PEMS07.csv"
 
         if npz_path.exists():
             try:
@@ -436,11 +458,13 @@ class PEMS07Adapter(BaseTrafficAdapter):
                 N = data.shape[1]
                 adj = _load_distance_csv_adj(csv_adj, N) if csv_adj.exists() else _create_spatial_line_adj(N)
                 sensors = [f"pems07_{i}" for i in range(N)]
+                self._is_real = True
                 return data, adj, sensors
             except Exception as e:
                 logger.warning(f"Error reading PEMS07 npz: {e}")
 
         logger.info(f"Generating verified PEMS07 large-scale benchmark profile (883 sensors, flow veh/5min).")
+        self._is_real = False
         return _generate_caltrans_benchmark_profile(
             num_nodes=self.manifest.num_nodes,
             num_timesteps=self.manifest.num_timesteps_expected,
@@ -461,6 +485,8 @@ class PEMS08Adapter(BaseTrafficAdapter):
     def load_data(self) -> Tuple[np.ndarray, np.ndarray, List[str]]:
         npz_path = self.data_dir / "PEMS08.npz"
         csv_adj = self.data_dir / "distance_PEMS08.csv"
+        if not csv_adj.exists():
+            csv_adj = self.data_dir / "PEMS08.csv"
 
         if npz_path.exists():
             try:
@@ -469,11 +495,14 @@ class PEMS08Adapter(BaseTrafficAdapter):
                 N = data.shape[1]
                 adj = _load_distance_csv_adj(csv_adj, N) if csv_adj.exists() else _create_spatial_line_adj(N)
                 sensors = [f"pems08_{i}" for i in range(N)]
+                self._is_real = True
+                logger.info(f"Loaded authentic physical PEMS08 dataset: {data.shape} ({N} sensors)")
                 return data, adj, sensors
             except Exception as e:
                 logger.warning(f"Error reading PEMS08 npz: {e}")
 
         logger.info(f"Generating verified PEMS08 flow benchmark profile (170 sensors, flow veh/5min).")
+        self._is_real = False
         return _generate_caltrans_benchmark_profile(
             num_nodes=self.manifest.num_nodes,
             num_timesteps=self.manifest.num_timesteps_expected,
@@ -522,7 +551,9 @@ class SingleDatasetWindowDataset(Dataset):
         adapter: BaseTrafficAdapter,
         split: str = "train",
         subsample_ratio: float = 1.0,
+        exact_samples: Optional[int] = None,
         max_samples: Optional[int] = None,
+        seed: int = 42,
     ):
         self.adapter = adapter
         self.dataset_id = adapter.dataset_id
@@ -535,7 +566,9 @@ class SingleDatasetWindowDataset(Dataset):
         x, y, m_x, m_y = adapter.create_sliding_windows(
             split=split,
             subsample_ratio=subsample_ratio,
+            exact_samples=exact_samples,
             max_samples=max_samples,
+            seed=seed,
         )
 
         self.x = torch.from_numpy(x).float()
@@ -736,7 +769,9 @@ def _load_distance_csv_adj(csv_path: Path, num_nodes: int) -> np.ndarray:
         for _, row in df.iterrows():
             u, v, d = int(row[cols[0]]), int(row[cols[1]]), float(row[cols[2]])
             if u < num_nodes and v < num_nodes:
-                adj[u, v] = math.exp(-d / 1000.0)
+                w = math.exp(-d / 1000.0)
+                adj[u, v] = w
+                adj[v, u] = w
     except Exception as e:
         logger.warning(f"Failed parsing distance csv {csv_path}: {e}")
         adj = _create_spatial_line_adj(num_nodes)

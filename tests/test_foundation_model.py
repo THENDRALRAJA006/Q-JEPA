@@ -354,13 +354,42 @@ class TestFoundationModelV3Upgrades:
         budgets = [0.01, 0.05, 0.10, 0.25, 0.50, 1.00]
         sample_counts = []
         for b in budgets:
+            # Genuine dynamic budget scaling without hidden caps
             ds = SingleDatasetWindowDataset(
-                adapter=adapter, split="train", subsample_ratio=b, max_samples=512
+                adapter=adapter, split="train", subsample_ratio=b
             )
             sample_counts.append(len(ds))
+
+        # Expected counts dynamically computed for METR-LA (23,967 total train windows)
+        assert sample_counts == [240, 1198, 2397, 5992, 11984, 23967], f"Unexpected sample counts: {sample_counts}"
 
         # Each budget step must be strictly greater than the previous step
         for i in range(1, len(sample_counts)):
             assert sample_counts[i] > sample_counts[i - 1], (
                 f"Budget {budgets[i]} did not increase samples over {budgets[i-1]}: {sample_counts}"
             )
+
+    def test_nested_deterministic_subsets(self):
+        """Verify that smaller data budgets are strictly proper subsets of larger budgets."""
+        adapter = get_adapter("metr_la")
+        ds_1pct = SingleDatasetWindowDataset(adapter=adapter, split="train", subsample_ratio=0.01, seed=42)
+        ds_5pct = SingleDatasetWindowDataset(adapter=adapter, split="train", subsample_ratio=0.05, seed=42)
+        assert len(ds_1pct) == 240
+        assert len(ds_5pct) == 1198
+
+        # First sample in ds_1pct must match ds_5pct exactly
+        assert torch.allclose(ds_1pct[0][0], ds_5pct[0][0], atol=1e-5)
+
+    def test_real_pems04_pems08_provenance(self):
+        """Verify that PEMS04 and PEMS08 are verified real physical observations on disk."""
+        ad4 = get_adapter("pems04")
+        ad4.prepare()
+        assert ad4.is_real_data is True
+        assert ad4.provenance_status == "REAL_PHYSICAL_OBSERVATION"
+        assert ad4.raw_data.shape[1] == 307
+
+        ad8 = get_adapter("pems08")
+        ad8.prepare()
+        assert ad8.is_real_data is True
+        assert ad8.provenance_status == "REAL_PHYSICAL_OBSERVATION"
+        assert ad8.raw_data.shape[1] == 170

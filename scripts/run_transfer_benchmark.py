@@ -54,9 +54,14 @@ def train_eval_probe(
     batch_size: int = 8,
     lr: float = 5e-4,
     device: torch.device = torch.device("cpu"),
-    max_samples: int = 512,
+    max_samples: Optional[int] = None,
+    test_samples: Optional[int] = 512,
+    seed: int = 42,
 ) -> Dict[str, Any]:
-    """Train probe/model on target dataset partition and evaluate multi-horizon MAE."""
+    """
+    Train probe/model on target dataset partition and evaluate multi-horizon MAE.
+    Guarantees identical, deterministic, properly nested sample subsets.
+    """
     manifest = get_manifest(target_dataset)
     adapter = get_adapter(target_dataset)
 
@@ -65,12 +70,14 @@ def train_eval_probe(
         split="train",
         subsample_ratio=subsample_ratio,
         max_samples=max_samples,
+        seed=seed,
     )
     test_ds = SingleDatasetWindowDataset(
         adapter=adapter,
         split="test",
         subsample_ratio=1.0,
-        max_samples=256,
+        max_samples=test_samples,
+        seed=seed,
     )
 
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=batch_size, shuffle=True)
@@ -94,7 +101,7 @@ def train_eval_probe(
                 optimizer.step()
     dur = time.time() - t0
 
-    # Evaluate test
+    # Evaluate held-out test split
     model.eval()
     all_preds, all_targets = [], []
     with torch.no_grad():
@@ -121,6 +128,7 @@ def train_eval_probe(
 def run_zero_shot_eval(
     model: JEPAGraphFoundationModel,
     target_dataset: str,
+    test_samples: Optional[int] = 512,
     device: torch.device = torch.device("cpu"),
 ) -> Dict[str, Any]:
     """Evaluate zero-shot transfer without gradient updates on target data."""
@@ -130,7 +138,8 @@ def run_zero_shot_eval(
         adapter=adapter,
         split="test",
         subsample_ratio=1.0,
-        max_samples=256,
+        max_samples=test_samples,
+        seed=42,
     )
     test_loader = torch.utils.data.DataLoader(test_ds, batch_size=8, shuffle=False)
     adj_tensor = test_ds.adj_tensor.to(device)
@@ -154,11 +163,14 @@ def run_zero_shot_eval(
 
 def run_benchmark(
     target_dataset: str = "metr_la",
-    pretrained_ckpt: Optional[Path] = Path("models/foundation/jepagraph_fm_tiny.pt"),
+    pretrained_ckpt: Optional[Path] = Path("models/foundation/jepagraph_fm_lodo_pems04_pems08.pt"),
+    smoke_test_limit: Optional[int] = None,
+    epochs: int = 3,
+    test_samples: Optional[int] = 512,
 ) -> Dict[str, Any]:
     device = torch.device("cpu")
     print("=" * 80)
-    print(f"CROSS-DATASET TRANSFER & DATA EFFICIENCY BENCHMARK V3.0")
+    print(f"CROSS-DATASET TRANSFER & DATA EFFICIENCY BENCHMARK V3.1 (LODO)")
     print(f"Target Unseen Network: {target_dataset.upper()}")
     print("=" * 80 + "\n")
 
@@ -167,46 +179,83 @@ def run_benchmark(
     # Verify LODO Isolation
     lodo_isolation_verified = True
     trained_datasets: List[str] = []
+    ckpt_hash = None
+    ckpt_data = None
+
     if pretrained_ckpt and pretrained_ckpt.exists():
+        import hashlib
+        sha = hashlib.sha256()
+        with open(pretrained_ckpt, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                sha.update(chunk)
+        ckpt_hash = sha.hexdigest()
+
         ckpt_data = torch.load(pretrained_ckpt, map_location=device)
         trained_datasets = ckpt_data.get("config", {}).get("datasets", {}).get("mixture", [])
         if target_dataset in trained_datasets:
             lodo_isolation_verified = False
             logger.warning(
-                f"[LODO Audit Warning] Checkpoint '{pretrained_ckpt.name}' previously included target "
-                f"'{target_dataset}' in its mixture! Marking lodo_isolation_verified=False."
+                f"[LODO Audit Warning] Checkpoint '{pretrained_ckpt.name}' included target "
+                f"'{target_dataset}' in source mixture! Marking lodo_isolation_verified=False."
             )
+        else:
+            logger.info(
+                f"[LODO Verified] Target '{target_dataset}' is strictly excluded from source pretraining "
+                f"mixture: {trained_datasets}. lodo_isolation_verified=True."
+            )
+    else:
+        lodo_isolation_verified = False
 
     # 1. Zero-shot transfer
     print("[*] Evaluating Zero-Shot Transfer...")
     zero_shot_model = JEPAGraphFoundationModel(config).to(device)
-    if pretrained_ckpt and pretrained_ckpt.exists():
+    if pretrained_ckpt and pretrained_ckpt.exists() and ckpt_data:
         zero_shot_model.load_state_dict(ckpt_data["model_state_dict"], strict=False)
-    zero_shot_metrics = run_zero_shot_eval(zero_shot_model, target_dataset, device)
+    zero_shot_metrics = run_zero_shot_eval(zero_shot_model, target_dataset, test_samples=test_samples, device=device)
     print(f"  Zero-shot 15m MAE: {zero_shot_metrics.get('15m', {}).get('mae')} | 60m MAE: {zero_shot_metrics.get('60m', {}).get('mae')}")
 
-    # 2. Data efficiency comparison: Pretrained vs Scratch across budgets
+    # 2. Data efficiency scaling curve: Pretrained vs Scratch across budgets
     budgets = [0.01, 0.05, 0.10, 0.25, 0.50, 1.00]
     data_efficiency_results = []
 
-    print("\n[*] Evaluating Data Efficiency Scaling Curve...")
+    experiment_type = "capped_development_test" if smoke_test_limit is not None else "full_data_efficiency_benchmark"
+
+    print(f"\n[*] Evaluating Data Efficiency Scaling Curve ({experiment_type.upper()})...")
     print(f"{'Budget':>8s} | {'Samples':>8s} | {'Pretrained 15m MAE':>20s} | {'Scratch 15m MAE':>18s} | {'Gain (%)':>10s}")
     print("-" * 75)
 
     for b in budgets:
         # Pretrained model initialization
         model_pre = JEPAGraphFoundationModel(config).to(device)
-        if pretrained_ckpt and pretrained_ckpt.exists():
+        if pretrained_ckpt and pretrained_ckpt.exists() and ckpt_data:
             model_pre.load_state_dict(ckpt_data["model_state_dict"], strict=False)
-        res_pre = train_eval_probe(model_pre, target_dataset, subsample_ratio=b, epochs=3, device=device)
+        res_pre = train_eval_probe(
+            model_pre,
+            target_dataset,
+            subsample_ratio=b,
+            epochs=epochs,
+            max_samples=smoke_test_limit,
+            test_samples=test_samples,
+            device=device,
+            seed=42,
+        )
 
-        # Scratch model initialization (random weights)
+        # Scratch model initialization (random weights, identical sample indices)
         model_scratch = JEPAGraphFoundationModel(config).to(device)
-        res_scratch = train_eval_probe(model_scratch, target_dataset, subsample_ratio=b, epochs=3, device=device)
+        res_scratch = train_eval_probe(
+            model_scratch,
+            target_dataset,
+            subsample_ratio=b,
+            epochs=epochs,
+            max_samples=smoke_test_limit,
+            test_samples=test_samples,
+            device=device,
+            seed=42,
+        )
 
         mae_pre = res_pre["metrics"]["15m"]["mae"]
         mae_scratch = res_scratch["metrics"]["15m"]["mae"]
-        gain_pct = ((mae_scratch - mae_pre) / mae_scratch) * 100.0
+        gain_pct = ((mae_scratch - mae_pre) / mae_scratch) * 100.0 if mae_scratch > 0 else 0.0
 
         n_samples = res_pre["train_samples"]
         print(f"{b*100:7.0f}% | {n_samples:8d} | {mae_pre:18.2f} mph | {mae_scratch:16.2f} mph | {gain_pct:+9.1f}%")
@@ -226,20 +275,27 @@ def run_benchmark(
 
     benchmark_summary = {
         "target_dataset": target_dataset,
+        "experiment_type": experiment_type,
+        "smoke_test_limit": smoke_test_limit,
         "pretrained_checkpoint": str(pretrained_ckpt) if pretrained_ckpt else None,
+        "checkpoint_sha256": ckpt_hash,
         "lodo_isolation_verified": lodo_isolation_verified,
         "source_pretraining_mixture": trained_datasets,
         "zero_shot_metrics": zero_shot_metrics,
         "data_efficiency_scaling": data_efficiency_results,
     }
 
-    out_file = project_root / "results" / "metrics" / f"foundation_transfer_{target_dataset}.json"
-    out_file.parent.mkdir(parents=True, exist_ok=True)
-    with open(out_file, "w") as f:
-        json.dump(benchmark_summary, f, indent=2)
+    # Save to both V3.1 and standard output locations
+    for out_path in [
+        project_root / "results" / "metrics" / "v3_1" / f"foundation_transfer_{target_dataset}_lodo.json",
+        project_root / "results" / "metrics" / f"foundation_transfer_{target_dataset}.json",
+    ]:
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w") as f:
+            json.dump(benchmark_summary, f, indent=2)
 
     print("\n" + "=" * 80)
-    print(f"Benchmark completed successfully! Report saved to {out_file}")
+    print(f"Benchmark completed successfully! Reports written to results/metrics/v3_1/foundation_transfer_{target_dataset}_lodo.json")
     print("=" * 80 + "\n")
     return benchmark_summary
 
@@ -247,10 +303,26 @@ def run_benchmark(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run cross-dataset transfer and data-efficiency benchmark.")
     parser.add_argument("--target", type=str, default="metr_la", help="Target dataset")
-    parser.add_argument("--ckpt", type=str, default="models/foundation/jepagraph_fm_tiny.pt", help="Pretrained checkpoint")
+    parser.add_argument(
+        "--ckpt",
+        type=str,
+        default="models/foundation/jepagraph_fm_lodo_pems04_pems08.pt",
+        help="Pretrained checkpoint",
+    )
+    parser.add_argument(
+        "--smoke_test",
+        type=int,
+        default=None,
+        help="Explicit sample cap for rapid development/smoke testing (labels run as capped)",
+    )
+    parser.add_argument("--epochs", type=int, default=3, help="Fine-tuning epochs per probe")
+    parser.add_argument("--test_samples", type=int, default=512, help="Held-out test set size")
     args = parser.parse_args()
 
     run_benchmark(
         target_dataset=args.target,
         pretrained_ckpt=Path(args.ckpt) if args.ckpt and Path(args.ckpt).exists() else None,
+        smoke_test_limit=args.smoke_test,
+        epochs=args.epochs,
+        test_samples=args.test_samples,
     )

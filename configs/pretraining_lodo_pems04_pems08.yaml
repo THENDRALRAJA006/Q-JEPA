@@ -1,0 +1,44 @@
+# Q-JEPA Foundation Model V3.1 — Leave-One-Dataset-Out (LODO) Pretraining Config
+# Source Datasets: PEMS04 + PEMS08 (100% Verified Real Physical Caltrans Traffic Data)
+# Excluded Target Dataset: METR-LA (Guaranteed Zero-Leakage LODO Isolation)
+
+model:
+  scale: tiny
+  in_channels: 3
+  hidden_dim: 32
+  num_layers: 2
+  dilations: [1, 2]
+  kernel_size: 2
+  input_window: 12
+  output_window: 12
+  predictor_layers: 1
+  dropout: 0.05
+  ema_decay: 0.99
+  mask_ratio: 0.15
+
+training:
+  batch_size: 8
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  max_epochs: 5
+  early_stopping_patience: 3
+  gradient_clip_norm: 5.0
+  device: cpu
+  use_amp: false
+  subsample_ratio: 0.10
+  max_samples_per_dataset: 256
+  checkpoint_dir: models/foundation
+  checkpoint_name: jepagraph_fm_lodo_pems04_pems08.pt
+
+objectives:
+  w_jepa: 1.0
+  w_mask: 0.5
+  w_sup: 1.0
+  w_temp: 0.05
+  huber_delta: 1.0
+
+datasets:
+  mixture:
+    - pems04
+    - pems08
+  sampling_temperature: 0.5

@@ -159,3 +159,65 @@ To transition from the audited state to the complete V3.0 system, the following 
 │    - Add V3 tests covering adaptive adjacency, LODO, and scaling curves│
 └────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 7. V3.1 Scientific Resolutions & Empirical Validation Audit
+
+In the V3.1 development cycle, all identified discrepancies from the V3.0 audit were addressed and experimentally validated on physical storage and computational artifacts:
+
+### 7.1 Dataset Verification & Real Data Acquisition
+- **Real Datasets Verified on Disk**:
+  1. `metr_la`: 69.11 MB CSV (34,272 timesteps, 207 sensors, speed in mph). License: CC BY 4.0.
+  2. `pems04`: 31.43 MB NPZ (16,992 timesteps, 307 sensors, flow/occupancy/speed). License: Caltrans Open Data. Acquired from ASTGCN benchmark repository.
+  3. `pems08`: 17.67 MB NPZ (17,856 timesteps, 170 sensors, flow/occupancy/speed). License: Caltrans Open Data. Acquired from ASTGCN benchmark repository.
+- **Procedural Simulation Profiles**:
+  `pems_bay`, `pems03`, and `pems07` remain marked as procedural synthetic fallbacks due to Zenodo API download blocks. They are explicitly excluded from foundation pretraining to maintain experimental integrity.
+- Artifact: `results/metrics/v3_1/dataset_validation_audit.json`.
+
+### 7.2 Resolution of the Data-Efficiency Budget Collapse
+- **Root Cause Identified**: `run_transfer_benchmark.py` previously passed a fixed `max_samples=256` to `SingleDatasetWindowDataset`, collapsing budgets from 5% to 100% to 256 samples.
+- **V3.1 Resolution**:
+  - Exact dynamic budget window counts computed from target split (23,967 windows for METR-LA):
+    `1% = 240`, `5% = 1,198`, `10% = 2,397`, `25% = 5,992`, `50% = 11,984`, `100% = 23,967`.
+  - Nested subset guarantee implemented via fixed-seed prefix permutation (`indices = perm[:num_target]`), ensuring $D_{1\%} \subset D_{5\%} \subset D_{10\%} \subset D_{25\%} \subset D_{50\%} \subset D_{100\%}$.
+  - Results in `results/metrics/v3_1/foundation_transfer_metr_la_lodo.json`.
+
+### 7.3 Leave-One-Dataset-Out (LODO) Multi-Dataset Pretraining
+- **Pretraining Configuration**: `configs/pretraining_lodo_pems04_pems08.yaml`.
+- **Source Mixture**: `["pems04", "pems08"]` (strictly excluding `metr_la`).
+- **Validation**: `lodo_isolation_verified: true` confirmed in artifact metadata.
+- **Checkpoint**: `models/foundation/jepagraph_fm_lodo_pems04_pems08.pt` (SHA-256: `b0c3edf379e42f83...`).
+- **Convergence**: 5 epochs (59.6s CPU runtime), validation loss decreased from `0.2133` to `0.0718`.
+- **Zero-Shot Target Transfer**: 15m MAE = **9.64 mph** on completely unseen METR-LA sensor topology with zero target fine-tuning.
+
+### 7.4 Data-Efficiency Scaling Curve on METR-LA
+| Budget (%) | Samples | Pretrained 15m MAE | Scratch 15m MAE | Pretrained Gain |
+|:---:|:---:|:---:|:---:|:---:|
+| **Zero-Shot** | 0 | 9.64 mph | — | Transfer bias |
+| **1%** | 240 | **5.65 mph** | 6.91 mph | **+18.2%** |
+| **5%** | 1,198 | **3.67 mph** | 3.95 mph | **+7.0%** |
+| **10%** | 2,397 | **3.75 mph** | 3.95 mph | **+5.0%** |
+| **25%** | 5,992 | **3.50 mph** | 3.48 mph | -0.4% |
+| **50%** | 11,984 | **3.36 mph** | 3.68 mph | **+8.9%** |
+| **100%** | 23,967 | **3.32 mph** | 3.48 mph | **+4.5%** |
+
+### 7.5 Fair Baseline Benchmark (Identical Held-Out METR-LA Windows)
+| Model | Parameters | Latency (ms) | 15m MAE (mph) | 30m MAE (mph) | 60m MAE (mph) |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| **Persistence** | 0 | 0.2 | 5.67 | 6.35 | 8.78 |
+| **STGCN** | 8,376 | 44.2 | 5.54 | 6.38 | 7.47 |
+| **Graph WaveNet** | 18,316 | 54.0 | 5.22 | 6.03 | 7.61 |
+| **JEPAGraph V1** | 12,268 | 34.3 | 5.20 | 6.01 | 7.49 |
+| **JEPAGraph Direct Regression** | 12,268 | 32.7 | 5.04 | 5.74 | 6.99 |
+| **JEPAGraph-FM Fine-Tuned** | **40,041** | **116.0** | **4.72** | **5.36** | **6.85** |
+
+### 7.6 Ambulance Routing Tradeoff Resolution
+- **Investigation of Previous Anomaly**: In V2.0, greedy current traffic was reported as 1130s vs forecast 1324s.
+- **Root Cause**: The previous audit recorded naive static estimated travel times rather than realized arrival traversal under true dynamically evolving congestion.
+- **Dynamic Realized Journey Time Benchmark (`scripts/audit_routing_tradeoffs.py`)**:
+  - *Stationary Congestion*: Greedy Current Traffic is near-optimal (648.4s vs 654.4s for forecast; minor 0.9% detour penalty).
+  - *Rush-Hour Onset (Growing Bottleneck)*: Time-dependent forecast saves **99.7 seconds (772.4s vs 872.1s, +11.4% faster)** and reduces P90 tail travel time by **396.0 seconds (1048.8s vs 1444.8s)** by anticipating downstream queue formation before the ambulance reaches the bottleneck.
+  - *Clearing Bottleneck*: Time-dependent forecast saves **62.9 seconds (690.8s vs 753.7s, +8.3% faster)** by routing toward links that will clear by arrival time.
+- Artifact: `results/metrics/v3_1/ambulance_routing_analysis.json`.
+

@@ -1,0 +1,151 @@
+{
+  "benchmark_title": "Q-JEPA V3.1 Controlled Baseline Benchmark",
+  "dataset": "metr_la",
+  "hardware_environment": "CPU (AMD64, PyTorch 2.9.0)",
+  "timesteps_evaluated": 2500,
+  "epochs_per_model": 2,
+  "locally_reproduced_models": {
+    "Persistence": {
+      "parameters": 0,
+      "train_time_s": 0.0,
+      "inference_latency_ms": 0.16,
+      "metrics": {
+        "15m": {
+          "mae": 5.6705,
+          "rmse": 12.8875
+        },
+        "30m": {
+          "mae": 6.3462,
+          "rmse": 13.6509
+        },
+        "60m": {
+          "mae": 8.783,
+          "rmse": 17.5208
+        }
+      }
+    },
+    "STGCN": {
+      "parameters": 8376,
+      "train_time_s": 21.76,
+      "inference_latency_ms": 44.2,
+      "metrics": {
+        "15m": {
+          "mae": 5.5429,
+          "rmse": 9.1118
+        },
+        "30m": {
+          "mae": 6.3799,
+          "rmse": 10.3325
+        },
+        "60m": {
+          "mae": 7.4714,
+          "rmse": 12.1092
+        }
+      }
+    },
+    "Graph_WaveNet": {
+      "parameters": 18316,
+      "train_time_s": 29.79,
+      "inference_latency_ms": 53.96,
+      "metrics": {
+        "15m": {
+          "mae": 5.2151,
+          "rmse": 8.9885
+        },
+        "30m": {
+          "mae": 6.0295,
+          "rmse": 10.3646
+        },
+        "60m": {
+          "mae": 7.6084,
+          "rmse": 12.2773
+        }
+      }
+    },
+    "JEPAGraph_V1": {
+      "parameters": 12268,
+      "train_time_s": 35.57,
+      "inference_latency_ms": 34.28,
+      "metrics": {
+        "15m": {
+          "mae": 5.1954,
+          "rmse": 8.8686
+        },
+        "30m": {
+          "mae": 6.013,
+          "rmse": 10.0905
+        },
+        "60m": {
+          "mae": 7.4948,
+          "rmse": 11.9232
+        }
+      }
+    },
+    "JEPAGraph_DirectRegression": {
+      "parameters": 12268,
+      "train_time_s": 34.8,
+      "inference_latency_ms": 32.72,
+      "metrics": {
+        "15m": {
+          "mae": 5.0388,
+          "rmse": 8.5994
+        },
+        "30m": {
+          "mae": 5.7357,
+          "rmse": 9.7619
+        },
+        "60m": {
+          "mae": 6.9906,
+          "rmse": 11.6005
+        }
+      }
+    },
+    "JEPAGraph_FM_Finetuned": {
+      "parameters": 40041,
+      "train_time_s": 54.06,
+      "inference_latency_ms": 116.03,
+      "metrics": {
+        "15m": {
+          "mae": 4.7226,
+          "rmse": 7.9639
+        },
+        "30m": {
+          "mae": 5.3553,
+          "rmse": 9.0529
+        },
+        "60m": {
+          "mae": 6.8532,
+          "rmse": 11.3116
+        }
+      }
+    }
+  },
+  "published_literature_sota": {
+    "note": "Published benchmark values from official papers on full METR-LA test split (34,272 timesteps, GPU converged).",
+    "DCRNN_Li_et_al_ICLR_2018": {
+      "15m_mae": 2.77,
+      "30m_mae": 3.15,
+      "60m_mae": 3.6
+    },
+    "STGCN_Yu_et_al_IJCAI_2018": {
+      "15m_mae": 2.88,
+      "30m_mae": 3.47,
+      "60m_mae": 4.59
+    },
+    "GraphWaveNet_Wu_et_al_IJCAI_2019": {
+      "15m_mae": 2.69,
+      "30m_mae": 3.07,
+      "60m_mae": 3.53
+    },
+    "ASTGCN_Guo_et_al_AAAI_2019": {
+      "15m_mae": 4.14,
+      "30m_mae": 5.07,
+      "60m_mae": 6.55
+    },
+    "GMAN_Zheng_et_al_AAAI_2020": {
+      "15m_mae": 2.77,
+      "30m_mae": 3.07,
+      "60m_mae": 3.4
+    }
+  }
+}

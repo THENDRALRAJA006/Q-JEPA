@@ -1,16 +1,25 @@
 {
   "metr_la": {
     "status": "PASSED",
+    "is_real_physical_data": true,
+    "eligible_for_pretraining": true,
+    "file_on_disk": "D:\\ZYNEX\\surakshit-bharat-q-jepa\\data\\metr_la\\METR-LA.csv",
+    "file_size_bytes": 72467662,
+    "file_size_mb": 69.11,
+    "sha256": "8d67a35472db1719d7d4be851f2bf64cb21d9c52577c8a6b4b873d43205af381",
     "manifest": {
       "name": "METR-LA Highway Traffic Speed",
       "primary_variable": "speed",
       "variable_units": "mph",
-      "license": "CC BY 4.0"
+      "sampling_interval_minutes": 5,
+      "license": "CC BY 4.0",
+      "provenance_repo": "https://github.com/liyaguang/DCRNN (Li et al., ICLR 2018)"
     },
     "shape": {
       "T": 34272,
       "N": 207
     },
+    "total_valid_train_windows": 23967,
     "graph_diagnostics": {
       "num_nodes": 207,
       "num_edges": 1515,
@@ -36,20 +45,29 @@
       "mean": 58.58426284790039,
       "std": 12.822882652282715
     },
-    "val_windows": 100
+    "val_windows_tested": 100
   },
   "pems_bay": {
-    "status": "PASSED",
+    "status": "SYNTHETIC_FALLBACK",
+    "is_real_physical_data": false,
+    "eligible_for_pretraining": false,
+    "file_on_disk": null,
+    "file_size_bytes": 0,
+    "file_size_mb": 0.0,
+    "sha256": null,
     "manifest": {
       "name": "PEMS-BAY Highway Traffic Speed",
       "primary_variable": "speed",
       "variable_units": "mph",
-      "license": "CC BY 4.0 / Caltrans Open Data"
+      "sampling_interval_minutes": 5,
+      "license": "CC BY 4.0 / Caltrans Open Data",
+      "provenance_repo": "https://github.com/liyaguang/DCRNN (Li et al., ICLR 2018)"
     },
     "shape": {
       "T": 52116,
       "N": 325
     },
+    "total_valid_train_windows": 36458,
     "graph_diagnostics": {
       "num_nodes": 325,
       "num_edges": 33208,
@@ -75,20 +93,29 @@
       "mean": 57.93535232543945,
       "std": 6.025723934173584
     },
-    "val_windows": 100
+    "val_windows_tested": 100
   },
   "pems03": {
-    "status": "PASSED",
+    "status": "SYNTHETIC_FALLBACK",
+    "is_real_physical_data": false,
+    "eligible_for_pretraining": false,
+    "file_on_disk": null,
+    "file_size_bytes": 0,
+    "file_size_mb": 0.0,
+    "sha256": null,
     "manifest": {
       "name": "PEMS03 Traffic Flow Benchmark",
       "primary_variable": "flow",
       "variable_units": "veh/5min",
-      "license": "CC BY 4.0 / Caltrans Open Data"
+      "sampling_interval_minutes": 5,
+      "license": "CC BY 4.0 / Caltrans Open Data",
+      "provenance_repo": "https://github.com/Davidham3/ASTGCN (Guo et al., AAAI 2019)"
     },
     "shape": {
       "T": 26208,
       "N": 358
     },
+    "total_valid_train_windows": 15701,
     "graph_diagnostics": {
       "num_nodes": 358,
       "num_edges": 40486,
@@ -114,59 +141,77 @@
       "mean": 251.87509155273438,
       "std": 43.244468688964844
     },
-    "val_windows": 100
+    "val_windows_tested": 100
   },
   "pems04": {
     "status": "PASSED",
+    "is_real_physical_data": true,
+    "eligible_for_pretraining": true,
+    "file_on_disk": "D:\\ZYNEX\\surakshit-bharat-q-jepa\\data\\pems04\\PEMS04.npz",
+    "file_size_bytes": 32956284,
+    "file_size_mb": 31.43,
+    "sha256": "95a3c9b720fffdb85f0330d09bfab41b0b3cad0ca86c0d7d5f3accacb4ac999a",
     "manifest": {
       "name": "PEMS04 Traffic Flow & Speed Benchmark",
       "primary_variable": "flow",
       "variable_units": "veh/5min",
-      "license": "CC BY 4.0 / Caltrans Open Data"
+      "sampling_interval_minutes": 5,
+      "license": "CC BY 4.0 / Caltrans Open Data",
+      "provenance_repo": "https://github.com/Davidham3/ASTGCN (Guo et al., AAAI 2019)"
     },
     "shape": {
       "T": 16992,
       "N": 307
     },
+    "total_valid_train_windows": 10172,
     "graph_diagnostics": {
       "num_nodes": 307,
-      "num_edges": 29680,
-      "density": 0.315939622320155,
+      "num_edges": 680,
+      "density": 0.007238508867173362,
       "isolated_nodes": 0,
       "is_symmetric": true,
-      "max_weight": 0.9986060857772827,
-      "min_nonzero_weight": 0.01987573318183422,
-      "avg_degree": 96.67752442996742
+      "max_weight": 0.9968051314353943,
+      "min_nonzero_weight": 0.06639722734689713,
+      "avg_degree": 2.214983713355049
     },
     "missingness": {
       "total_elements": 5216544,
       "nan_count": 0,
       "nan_ratio": 0.0,
-      "zero_count": 156753,
-      "zero_ratio": 0.030049204990890522,
+      "zero_count": 82935,
+      "zero_ratio": 0.015898456909402087,
       "negative_count": 0,
-      "missing_ratio": 0.030049204990890522,
-      "valid_count": 5059791,
-      "valid_ratio": 0.9699507950091095
+      "missing_ratio": 0.015898456909402087,
+      "valid_count": 5133609,
+      "valid_ratio": 0.9841015430905979
     },
     "train_statistics": {
-      "mean": 232.466796875,
-      "std": 38.066497802734375
+      "mean": 210.75071716308594,
+      "std": 155.44107055664062
     },
-    "val_windows": 100
+    "val_windows_tested": 100
   },
   "pems07": {
-    "status": "PASSED",
+    "status": "SYNTHETIC_FALLBACK",
+    "is_real_physical_data": false,
+    "eligible_for_pretraining": false,
+    "file_on_disk": null,
+    "file_size_bytes": 0,
+    "file_size_mb": 0.0,
+    "sha256": null,
     "manifest": {
       "name": "PEMS07 Large-Scale Traffic Flow Benchmark",
       "primary_variable": "flow",
       "variable_units": "veh/5min",
-      "license": "CC BY 4.0 / Caltrans Open Data"
+      "sampling_interval_minutes": 5,
+      "license": "CC BY 4.0 / Caltrans Open Data",
+      "provenance_repo": "https://github.com/Davidham3/ASTGCN (Guo et al., AAAI 2019)"
     },
     "shape": {
       "T": 28224,
       "N": 883
     },
+    "total_valid_train_windows": 16911,
     "graph_diagnostics": {
       "num_nodes": 883,
       "num_edges": 248094,
@@ -192,45 +237,54 @@
       "mean": 276.5361022949219,
       "std": 49.26603698730469
     },
-    "val_windows": 100
+    "val_windows_tested": 100
   },
   "pems08": {
     "status": "PASSED",
+    "is_real_physical_data": true,
+    "eligible_for_pretraining": true,
+    "file_on_disk": "D:\\ZYNEX\\surakshit-bharat-q-jepa\\data\\pems08\\PEMS08.npz",
+    "file_size_bytes": 18525419,
+    "file_size_mb": 17.67,
+    "sha256": "e1d03ce74e9fb79149e6e7c37c680214822c4a285baa2f42278cacabcd25c075",
     "manifest": {
       "name": "PEMS08 Traffic Flow Benchmark",
       "primary_variable": "flow",
       "variable_units": "veh/5min",
-      "license": "CC BY 4.0 / Caltrans Open Data"
+      "sampling_interval_minutes": 5,
+      "license": "CC BY 4.0 / Caltrans Open Data",
+      "provenance_repo": "https://github.com/Davidham3/ASTGCN (Guo et al., AAAI 2019)"
     },
     "shape": {
       "T": 17856,
       "N": 170
     },
+    "total_valid_train_windows": 10690,
     "graph_diagnostics": {
       "num_nodes": 170,
-      "num_edges": 8990,
-      "density": 0.31291333101287855,
+      "num_edges": 548,
+      "density": 0.019074138531152106,
       "isolated_nodes": 0,
       "is_symmetric": true,
-      "max_weight": 0.9954373240470886,
-      "min_nonzero_weight": 0.021365555003285408,
-      "avg_degree": 52.88235294117647
+      "max_weight": 0.9937198162078857,
+      "min_nonzero_weight": 0.03783956542611122,
+      "avg_degree": 3.223529411764706
     },
     "missingness": {
       "total_elements": 3035520,
       "nan_count": 0,
       "nan_ratio": 0.0,
-      "zero_count": 90677,
-      "zero_ratio": 0.02987198239510858,
+      "zero_count": 10560,
+      "zero_ratio": 0.003478810879190386,
       "negative_count": 0,
-      "missing_ratio": 0.02987198239510858,
-      "valid_count": 2944843,
-      "valid_ratio": 0.9701280176048914
+      "missing_ratio": 0.003478810879190386,
+      "valid_count": 3024960,
+      "valid_ratio": 0.9965211891208097
     },
     "train_statistics": {
-      "mean": 260.50885009765625,
-      "std": 40.17860794067383
+      "mean": 230.4516143798828,
+      "std": 145.26638793945312
     },
-    "val_windows": 100
+    "val_windows_tested": 100
   }
 }

@@ -212,15 +212,93 @@ Evaluated on simulated urban network (80 directed edges) across 50 dispatches:
 
 ---
 
-## 5. Complete Test Suite Summary
+## 5. Test Suite History (Phase 2 & 3)
 
 ```bash
 python -m pytest -q
-# Result: 107 passed in 20.90s (Process Exit Code: 0)
+# Historical Phase 3: 107 passed in 20.90s (Process Exit Code: 0)
 ```
 - `tests/test_all.py`: 33 passed
 - `tests/test_integration.py`: 38 passed
 - `tests/test_real_graph_forecasting.py`: 16 passed
 - `tests/test_time_dependent_routing.py`: 5 passed
-- `tests/test_foundation_model.py`: 15 passed (100% test pass rate)
+- `tests/test_foundation_model.py`: 15 passed
+
+---
+
+## 6. Q-JEPA Master Model V3.1 — Real Data & Controlled Empirical Validation
+
+### 6.1 Verified Real Data Acquisition & Dataset Audit
+All datasets were audited for real vs synthetic status (`results/metrics/v3_1/dataset_validation_audit.json`):
+- **METR-LA**: 69.11 MB, 207 sensors, 34,272 timesteps. Real highway speed data (CC BY 4.0).
+- **PEMS04**: 31.43 MB, 307 sensors, 16,992 timesteps. Real Caltrans District 4 sensor data (Open Data).
+- **PEMS08**: 17.67 MB, 170 sensors, 17,856 timesteps. Real Caltrans District 8 sensor data (Open Data).
+- **PEMS-BAY, PEMS03, PEMS07**: Procedural simulation profiles (Zenodo remote access blocked); strictly excluded from foundation model pretraining.
+
+### 6.2 Leave-One-Dataset-Out (LODO) Multi-Dataset Pretraining
+- **Source Mixture**: `["pems04", "pems08"]` (both real datasets; `metr_la` strictly held out).
+- **LODO Isolation**: `lodo_isolation_verified: true`.
+- **Pretrained Checkpoint**: `models/foundation/jepagraph_fm_lodo_pems04_pems08.pt` (SHA-256: `b0c3edf379e42f83...`).
+- **Pretraining Trajectory**: 5 epochs (59.6s total CPU runtime). Loss: Epoch 1 (0.2133) $\to$ Epoch 5 (0.0718).
+- **Target Zero-Shot Evaluation**: On unseen METR-LA topology with zero gradient updates: 15m MAE = **9.64 mph**.
+
+### 6.3 Dynamic Data-Efficiency Scaling Benchmark (Target: METR-LA)
+Dynamic sample budgets were computed directly from the 23,967 available target training windows with nested prefix subsets ($D_{1\%} \subset D_{5\%} \subset \dots \subset D_{100\%}$):
+
+| Budget (%) | Target Windows | Pretrained 15m MAE | Scratch 15m MAE | Pretrained Relative Gain |
+|:---:|:---:|:---:|:---:|:---:|
+| **Zero-Shot** | 0 | 9.64 mph | — | Prior Inductive Bias |
+| **1%** | 240 | **5.65 mph** | 6.91 mph | **+18.2%** |
+| **5%** | 1,198 | **3.67 mph** | 3.95 mph | **+7.0%** |
+| **10%** | 2,397 | **3.75 mph** | 3.95 mph | **+5.0%** |
+| **25%** | 5,992 | **3.50 mph** | 3.48 mph | -0.4% |
+| **50%** | 11,984 | **3.36 mph** | 3.68 mph | **+8.9%** |
+| **100%** | 23,967 | **3.32 mph** | 3.48 mph | **+4.5%** |
+
+*Artifact*: `results/metrics/v3_1/foundation_transfer_metr_la_lodo.json`
+
+### 6.4 Fair Multi-Horizon Baseline Benchmark
+All 6 models were evaluated on the identical held-out test windows of METR-LA:
+
+| Model | Model Class | Parameters | Inference Latency | 15m MAE (step 3) | 30m MAE (step 6) | 60m MAE (step 12) |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Persistence** | Heuristic | 0 | 0.2 ms | 5.67 mph | 6.35 mph | 8.78 mph |
+| **STGCN** | Graph Conv | 8,376 | 44.2 ms | 5.54 mph | 6.38 mph | 7.47 mph |
+| **Graph WaveNet** | Dilated GCN | 18,316 | 54.0 ms | 5.22 mph | 6.03 mph | 7.61 mph |
+| **JEPAGraph V1** | Graph JEPA | 12,268 | 34.3 ms | 5.20 mph | 6.01 mph | 7.49 mph |
+| **JEPAGraph Direct Reg** | Supervised | 12,268 | 32.7 ms | 5.04 mph | 5.74 mph | 6.99 mph |
+| **JEPAGraph-FM (LODO FT)**| Foundation | **40,041** | 116.0 ms | **4.72 mph** | **5.36 mph** | **6.85 mph** |
+
+*Artifact*: `results/metrics/v3_1/fair_baselines_benchmark.json`
+
+### 6.5 Dynamic Realized Ambulance Routing Tradeoff Benchmark
+Simulated physical vehicle traversal under evolving congestion (`scripts/audit_routing_tradeoffs.py`):
+
+| Congestion Regime | Greedy Current Traffic (s) | Time-Dependent Forecast (s) | Absolute Time Saved | Relative Benefit | P90 Travel Time Improvement |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| **Stationary Congestion** | **648.4 s** | 654.4 s | -6.0 s | -0.9% (minor detour) | +14.4 s |
+| **Rush-Hour Onset (Growing)** | 872.1 s | **772.4 s** | **+99.7 s** | **+11.4% faster** | **-396.0 s (1444.8s $\to$ 1048.8s)** |
+| **Clearing Bottleneck** | 753.7 s | **690.8 s** | **+62.9 s** | **+8.3% faster** | **-73.4 s (1141.0s $\to$ 1067.6s)** |
+| **Random Fluctuation** | 694.7 s | 693.3 s | +1.4 s | +0.2% | -10.0 s |
+
+*Audit Discovery*: Previous audits evaluating naive static travel time reported 1130s vs 1324s because greedy routing assumed current clear roads would stay clear forever. Under physical dynamic movement, predictive routing avoids developing congestion, saving up to 100 seconds (+11.4%) during rush-hour onset.
+
+*Artifact*: `results/metrics/v3_1/ambulance_routing_analysis.json`
+
+---
+
+## 7. Current Comprehensive Test Suite Status (V3.1)
+
+```bash
+python -m pytest -q
+# Result: 135 passed in 23.61s (Process Exit Code: 0)
+```
+- `tests/test_all.py`: 33 passed
+- `tests/test_integration.py`: 38 passed
+- `tests/test_real_graph_forecasting.py`: 16 passed
+- `tests/test_time_dependent_routing.py`: 5 passed
+- `tests/test_foundation_model.py`: 20 passed
+- `tests/test_v3_validation.py`: 23 passed
+- **Total Passing Tests**: **135 / 135 (100% pass rate)**
+
 
