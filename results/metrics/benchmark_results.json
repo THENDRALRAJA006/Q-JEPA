@@ -1,0 +1,40 @@
+{
+  "summary": {
+    "shortest_distance": {
+      "mean_s": 1391.9803253370812,
+      "median_s": 1363.6543335050892,
+      "p90_s": 2154.5611566257917,
+      "unreachable_rate": 0.0,
+      "n_scenarios": 15
+    },
+    "current_traffic": {
+      "mean_s": 1308.0809494527841,
+      "median_s": 1181.0957205035056,
+      "p90_s": 1997.8857824913714,
+      "unreachable_rate": 0.0,
+      "n_scenarios": 15
+    },
+    "predicted_traffic": {
+      "mean_s": 1308.0809494527841,
+      "median_s": 1181.0957205035056,
+      "p90_s": 1997.8857824913714,
+      "unreachable_rate": 0.0,
+      "n_scenarios": 15
+    },
+    "uncertainty_aware": {
+      "mean_s": 1308.0809494527841,
+      "median_s": 1181.0957205035056,
+      "p90_s": 1997.8857824913714,
+      "unreachable_rate": 0.0,
+      "n_scenarios": 15
+    },
+    "quantum_inspired": {
+      "mean_s": 1308.0809494527841,
+      "median_s": 1181.0957205035056,
+      "p90_s": 1997.8857824913714,
+      "unreachable_rate": 0.0,
+      "n_scenarios": 15
+    }
+  },
+  "note": "[SIMULATED EXPERIMENTS]"
+}

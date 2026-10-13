@@ -1,0 +1,246 @@
+scenario_id,scenario_type,seed,strategy,model_name,travel_time_s,feasible,distance_m,uncertainty_s,compute_ms,has_incident,has_closure,forecast_available
+S01_normal,normal,42,A_shortest_distance,,2155.9566635266706,True,23544.432237452707,0.0,1.8028000195045024,False,False,False
+S01_normal,normal,42,B_current_traffic,,1875.3627525957472,True,24268.554785821372,0.0,0.6573999999091029,False,False,False
+S01_normal,normal,42,C_historical,Historical Average,1929.6440174673053,True,24268.554785821372,0.0,1.1171000078320503,False,False,True
+S01_normal,normal,42,D_lstm_predicted,LSTM,1895.230184118192,True,24268.554785821372,0.0,0.9798999817576259,False,False,True
+S01_normal,normal,42,E_jepa_predicted,JEPA-Traffic,1923.959308511967,True,24268.554785821372,0.0,1.2936000130139291,False,False,True
+S01_normal,normal,42,F_jepa_uncertainty,JEPA-Traffic+UA,1875.3627525957472,True,24268.554785821372,192.39594,0.83710000035353,False,False,True
+S01_normal,normal,42,G_quantum_inspired,SA (classical),1875.3627525957472,True,24268.554785821372,0.0,42.000299989013,False,False,True
+S02_rush_hour,rush_hour,43,A_shortest_distance,,2259.9177188881854,True,26880.204157802225,0.0,0.6978999881539494,False,False,False
+S02_rush_hour,rush_hour,43,B_current_traffic,,2146.6890223771325,True,29001.11304024065,0.0,0.5759999912697822,False,False,False
+S02_rush_hour,rush_hour,43,C_historical,Historical Average,2142.4491927131266,True,29001.11304024065,0.0,0.6362999847624451,False,False,True
+S02_rush_hour,rush_hour,43,D_lstm_predicted,LSTM,2144.290548579802,True,29001.11304024065,0.0,1.1112999927718192,False,False,True
+S02_rush_hour,rush_hour,43,E_jepa_predicted,JEPA-Traffic,2176.988623016521,True,29001.11304024065,0.0,1.7463999975007027,False,False,True
+S02_rush_hour,rush_hour,43,F_jepa_uncertainty,JEPA-Traffic+UA,2146.6890223771325,True,29001.11304024065,217.69888,1.0958999919239432,False,False,True
+S02_rush_hour,rush_hour,43,G_quantum_inspired,SA (classical),2146.6890223771325,True,29001.11304024065,0.0,46.83390000718646,False,False,True
+S03_road_blockage,road_blockage,44,A_shortest_distance,,864.8194333554807,True,12367.427900355184,0.0,0.8036000072024763,False,True,False
+S03_road_blockage,road_blockage,44,B_current_traffic,,864.8194333554807,True,12367.427900355184,0.0,1.1221000168006867,False,True,False
+S03_road_blockage,road_blockage,44,C_historical,Historical Average,864.3322376854554,True,12367.427900355184,0.0,0.9039000142365694,False,True,True
+S03_road_blockage,road_blockage,44,D_lstm_predicted,LSTM,863.7019938308074,True,12367.427900355184,0.0,1.1865999840665609,False,True,True
+S03_road_blockage,road_blockage,44,E_jepa_predicted,JEPA-Traffic,880.069828594419,True,12367.427900355184,0.0,1.6827000072225928,False,True,True
+S03_road_blockage,road_blockage,44,F_jepa_uncertainty,JEPA-Traffic+UA,864.8194333554807,True,12367.427900355184,88.00699,0.8831000013742596,False,True,True
+S03_road_blockage,road_blockage,44,G_quantum_inspired,SA (classical),864.8194333554807,True,12367.427900355184,0.0,41.072399995755404,False,True,True
+S04_queue_spillback,queue_spillback,45,A_shortest_distance,,1046.2360682242715,True,12571.16886372397,0.0,1.084199990145862,False,False,False
+S04_queue_spillback,queue_spillback,45,B_current_traffic,,1017.0539315906904,True,13000.061900535422,0.0,0.7244999869726598,False,False,False
+S04_queue_spillback,queue_spillback,45,C_historical,Historical Average,989.0499054076865,True,13000.061900535422,0.0,0.7711999933235347,False,False,True
+S04_queue_spillback,queue_spillback,45,D_lstm_predicted,LSTM,1007.9151638272222,True,13000.061900535422,0.0,1.1822999804280698,False,False,True
+S04_queue_spillback,queue_spillback,45,E_jepa_predicted,JEPA-Traffic,1023.4886495374199,True,13000.061900535422,0.0,1.3564999972004443,False,False,True
+S04_queue_spillback,queue_spillback,45,F_jepa_uncertainty,JEPA-Traffic+UA,1017.0539315906904,True,13000.061900535422,102.34887,0.9292000031564385,False,False,True
+S04_queue_spillback,queue_spillback,45,G_quantum_inspired,SA (classical),1017.0539315906904,True,13000.061900535422,0.0,40.099100006045774,False,False,True
+S05_missing_obs,missing_obs,46,A_shortest_distance,,299.159125608416,True,3775.3988092847644,0.0,1.0258000111207366,False,False,False
+S05_missing_obs,missing_obs,46,B_current_traffic,,299.159125608416,True,3775.3988092847644,0.0,0.8584000170230865,False,False,False
+S05_missing_obs,missing_obs,46,C_historical,Historical Average,313.2192919504508,True,3775.3988092847644,0.0,0.7551999879069626,False,False,True
+S05_missing_obs,missing_obs,46,D_lstm_predicted,LSTM,315.7424828916337,True,3775.3988092847644,0.0,0.8718999742995948,False,False,True
+S05_missing_obs,missing_obs,46,E_jepa_predicted,JEPA-Traffic,319.5067158717296,True,3775.3988092847644,0.0,1.3202000118326396,False,False,True
+S05_missing_obs,missing_obs,46,F_jepa_uncertainty,JEPA-Traffic+UA,299.159125608416,True,3775.3988092847644,31.950672,0.6327999872155488,False,False,True
+S05_missing_obs,missing_obs,46,G_quantum_inspired,SA (classical),299.159125608416,True,3775.3988092847644,0.0,42.38299999269657,False,False,True
+S06_noisy_obs,noisy_obs,47,A_shortest_distance,,687.8751466756211,True,7307.309204008375,0.0,0.5798999918624759,False,False,False
+S06_noisy_obs,noisy_obs,47,B_current_traffic,,591.7778246423672,True,7672.256133806917,0.0,0.4957999917678535,False,False,False
+S06_noisy_obs,noisy_obs,47,C_historical,Historical Average,626.1219886417907,True,7672.256133806917,0.0,0.5227999936323613,False,False,True
+S06_noisy_obs,noisy_obs,47,D_lstm_predicted,LSTM,599.095367249378,True,7672.256133806917,0.0,0.7254999945871532,False,False,True
+S06_noisy_obs,noisy_obs,47,E_jepa_predicted,JEPA-Traffic,608.6157501384831,True,7672.256133806917,0.0,1.1033000191673636,False,False,True
+S06_noisy_obs,noisy_obs,47,F_jepa_uncertainty,JEPA-Traffic+UA,591.7778246423672,True,7672.256133806917,60.86158,0.7986999989952892,False,False,True
+S06_noisy_obs,noisy_obs,47,G_quantum_inspired,SA (classical),591.7778246423672,True,7672.256133806917,0.0,37.86290000425652,False,False,True
+S07_dynamic_reroute,dynamic_reroute,48,A_shortest_distance,,826.9642914580686,True,11921.830671397089,0.0,0.8304000075440854,True,False,False
+S07_dynamic_reroute,dynamic_reroute,48,B_current_traffic,,826.9642914580686,True,11921.830671397089,0.0,0.7119000074453652,True,False,False
+S07_dynamic_reroute,dynamic_reroute,48,C_historical,Historical Average,834.9036278276823,True,11921.830671397089,0.0,0.7284999883268028,True,False,True
+S07_dynamic_reroute,dynamic_reroute,48,D_lstm_predicted,LSTM,830.6477096825405,True,11921.830671397089,0.0,0.6846000032965094,True,False,True
+S07_dynamic_reroute,dynamic_reroute,48,E_jepa_predicted,JEPA-Traffic,847.8247426301675,True,11921.830671397089,0.0,0.8362000226043165,True,False,True
+S07_dynamic_reroute,dynamic_reroute,48,F_jepa_uncertainty,JEPA-Traffic+UA,826.9642914580686,True,11921.830671397089,84.78248,0.5808999994769692,True,False,True
+S07_dynamic_reroute,dynamic_reroute,48,G_quantum_inspired,SA (classical),826.9642914580686,True,11921.830671397089,0.0,35.25020001688972,True,False,True
+S01_normal,normal,43,A_shortest_distance,,512.0895610422142,True,7688.694406394967,0.0,0.7053000153973699,False,False,False
+S01_normal,normal,43,B_current_traffic,,512.0895610422142,True,7688.694406394967,0.0,0.502900016726926,False,False,False
+S01_normal,normal,43,C_historical,Historical Average,524.9229537960359,True,7688.694406394967,0.0,0.7053999870549887,False,False,True
+S01_normal,normal,43,D_lstm_predicted,LSTM,519.4664279409174,True,7688.694406394967,0.0,0.6961000035516918,False,False,True
+S01_normal,normal,43,E_jepa_predicted,JEPA-Traffic,529.261606196409,True,7688.694406394967,0.0,0.963800004683435,False,False,True
+S01_normal,normal,43,F_jepa_uncertainty,JEPA-Traffic+UA,512.0895610422142,True,7688.694406394967,52.926163,0.8866999996826053,False,False,True
+S01_normal,normal,43,G_quantum_inspired,SA (classical),512.0895610422142,True,7688.694406394967,0.0,36.9189000048209,False,False,True
+S02_rush_hour,rush_hour,44,A_shortest_distance,,1632.5115762514615,True,22946.956258410486,0.0,0.9214000019710511,False,False,False
+S02_rush_hour,rush_hour,44,B_current_traffic,,1632.5115762514615,True,22946.956258410486,0.0,0.7668000180274248,False,False,False
+S02_rush_hour,rush_hour,44,C_historical,Historical Average,1646.1555893682448,True,22946.956258410486,0.0,0.7379999733529985,False,False,True
+S02_rush_hour,rush_hour,44,D_lstm_predicted,LSTM,1638.5192620510138,True,22946.956258410486,0.0,0.769499980378896,False,False,True
+S02_rush_hour,rush_hour,44,E_jepa_predicted,JEPA-Traffic,1664.921627857051,True,22946.956258410486,0.0,0.9057999996002764,False,False,True
+S02_rush_hour,rush_hour,44,F_jepa_uncertainty,JEPA-Traffic+UA,1632.5115762514615,True,22946.956258410486,166.49216,0.8819999929983169,False,False,True
+S02_rush_hour,rush_hour,44,G_quantum_inspired,SA (classical),1632.5115762514615,True,22946.956258410486,0.0,44.896200008224696,False,False,True
+S03_road_blockage,road_blockage,45,A_shortest_distance,,1237.4557013642216,True,15468.713894319391,0.0,1.0065000096801668,False,True,False
+S03_road_blockage,road_blockage,45,B_current_traffic,,1139.2185584409863,True,16535.635155271062,0.0,0.763899995945394,False,True,False
+S03_road_blockage,road_blockage,45,C_historical,Historical Average,1159.9056926463168,True,16535.635155271062,0.0,0.7708999910391867,False,True,True
+S03_road_blockage,road_blockage,45,D_lstm_predicted,LSTM,1143.9484153721587,True,16535.635155271062,0.0,1.20749999769032,False,True,True
+S03_road_blockage,road_blockage,45,E_jepa_predicted,JEPA-Traffic,1165.4492494579017,True,16535.635155271062,0.0,1.2427999754436314,False,True,True
+S03_road_blockage,road_blockage,45,F_jepa_uncertainty,JEPA-Traffic+UA,1139.2185584409863,True,16535.635155271062,116.54493,0.846699986141175,False,True,True
+S03_road_blockage,road_blockage,45,G_quantum_inspired,SA (classical),1139.2185584409863,True,16535.635155271062,0.0,41.77860001800582,False,True,True
+S04_queue_spillback,queue_spillback,46,A_shortest_distance,,879.929796784467,True,11425.140533999169,0.0,0.7787000213284045,False,False,False
+S04_queue_spillback,queue_spillback,46,B_current_traffic,,879.929796784467,True,11425.140533999169,0.0,0.5208999791648239,False,False,False
+S04_queue_spillback,queue_spillback,46,C_historical,Historical Average,866.1257383696657,True,11425.140533999169,0.0,0.5341999931260943,False,False,True
+S04_queue_spillback,queue_spillback,46,D_lstm_predicted,LSTM,870.5904559335306,True,11425.140533999169,0.0,1.007299986667931,False,False,True
+S04_queue_spillback,queue_spillback,46,E_jepa_predicted,JEPA-Traffic,887.647956324487,True,11425.140533999169,0.0,1.2464000028558075,False,False,True
+S04_queue_spillback,queue_spillback,46,F_jepa_uncertainty,JEPA-Traffic+UA,879.929796784467,True,11425.140533999169,88.7648,0.9537999867461622,False,False,True
+S04_queue_spillback,queue_spillback,46,G_quantum_inspired,SA (classical),879.929796784467,True,11425.140533999169,0.0,45.47230000025593,False,False,True
+S05_missing_obs,missing_obs,47,A_shortest_distance,,1613.7588790949499,True,19216.227611341015,0.0,0.6409000197891146,False,False,False
+S05_missing_obs,missing_obs,47,B_current_traffic,,1556.6617190320337,True,19779.751549547655,0.0,0.8893999911379069,False,False,False
+S05_missing_obs,missing_obs,47,C_historical,Historical Average,1542.7960436631238,True,19779.751549547655,0.0,0.6054000114090741,False,False,True
+S05_missing_obs,missing_obs,47,D_lstm_predicted,LSTM,1531.0399174457743,True,19779.751549547655,0.0,0.9700999944470823,False,False,True
+S05_missing_obs,missing_obs,47,E_jepa_predicted,JEPA-Traffic,1557.1068054577659,True,19779.751549547655,0.0,1.1670000094454736,False,False,True
+S05_missing_obs,missing_obs,47,F_jepa_uncertainty,JEPA-Traffic+UA,1556.6617190320337,True,19779.751549547655,155.71068,0.9341000113636255,False,False,True
+S05_missing_obs,missing_obs,47,G_quantum_inspired,SA (classical),1556.6617190320337,True,19779.751549547655,0.0,42.01410000678152,False,False,True
+S06_noisy_obs,noisy_obs,48,A_shortest_distance,,360.36122930958584,True,3542.4495836367737,0.0,0.8202999888453633,False,False,False
+S06_noisy_obs,noisy_obs,48,B_current_traffic,,360.36122930958584,True,3542.4495836367737,0.0,0.5748999828938395,False,False,False
+S06_noisy_obs,noisy_obs,48,C_historical,Historical Average,361.8716954122532,True,3542.4495836367737,0.0,0.534699996933341,False,False,True
+S06_noisy_obs,noisy_obs,48,D_lstm_predicted,LSTM,386.44913483228186,True,3542.4495836367737,0.0,0.9640000062063336,False,False,True
+S06_noisy_obs,noisy_obs,48,E_jepa_predicted,JEPA-Traffic,388.50755232826936,True,3542.4495836367737,0.0,1.0895000013988465,False,False,True
+S06_noisy_obs,noisy_obs,48,F_jepa_uncertainty,JEPA-Traffic+UA,360.36122930958584,True,3542.4495836367737,38.850758,0.7922000077087432,False,False,True
+S06_noisy_obs,noisy_obs,48,G_quantum_inspired,SA (classical),360.36122930958584,True,3542.4495836367737,0.0,35.187300003599375,False,False,True
+S07_dynamic_reroute,dynamic_reroute,49,A_shortest_distance,,674.0375397611023,True,7849.9803650118,0.0,0.8111000061035156,True,False,False
+S07_dynamic_reroute,dynamic_reroute,49,B_current_traffic,,638.4704608333328,True,8017.630769444698,0.0,0.7239000115077943,True,False,False
+S07_dynamic_reroute,dynamic_reroute,49,C_historical,Historical Average,646.4584944345802,True,8017.630769444698,0.0,0.6384000007528812,True,False,True
+S07_dynamic_reroute,dynamic_reroute,49,D_lstm_predicted,LSTM,650.3804371466063,True,8017.630769444698,0.0,0.9399999980814755,True,False,True
+S07_dynamic_reroute,dynamic_reroute,49,E_jepa_predicted,JEPA-Traffic,657.2774315238894,True,8017.630769444698,0.0,1.121099980082363,True,False,True
+S07_dynamic_reroute,dynamic_reroute,49,F_jepa_uncertainty,JEPA-Traffic+UA,638.4704608333328,True,8017.630769444698,65.727745,0.8071000047493726,True,False,True
+S07_dynamic_reroute,dynamic_reroute,49,G_quantum_inspired,SA (classical),638.4704608333328,True,8017.630769444698,0.0,43.782300024759024,True,False,True
+S01_normal,normal,44,A_shortest_distance,,1753.1620874817243,True,20025.977198697394,0.0,1.0024000075645745,False,False,False
+S01_normal,normal,44,B_current_traffic,,1537.7522492616126,True,21148.37358633965,0.0,0.7934000168461353,False,False,False
+S01_normal,normal,44,C_historical,Historical Average,1557.713892078257,True,21148.37358633965,0.0,0.8285999938379973,False,False,True
+S01_normal,normal,44,D_lstm_predicted,LSTM,1557.3192135114434,True,21148.37358633965,0.0,1.0292000079061836,False,False,True
+S01_normal,normal,44,E_jepa_predicted,JEPA-Traffic,1584.1796866013688,True,21148.37358633965,0.0,1.0485000093467534,False,False,True
+S01_normal,normal,44,F_jepa_uncertainty,JEPA-Traffic+UA,1537.7522492616126,True,21148.37358633965,158.41797,0.7431999838445336,False,False,True
+S01_normal,normal,44,G_quantum_inspired,SA (classical),1537.7522492616126,True,21148.37358633965,0.0,38.38260000338778,False,False,True
+S02_rush_hour,rush_hour,45,A_shortest_distance,,602.2303385370087,True,8183.789404493044,0.0,0.7385000062640756,False,False,False
+S02_rush_hour,rush_hour,45,B_current_traffic,,602.2303385370087,True,8183.789404493044,0.0,0.9111000108532608,False,False,False
+S02_rush_hour,rush_hour,45,C_historical,Historical Average,593.6533665319076,True,8183.789404493044,0.0,0.8783999946899712,False,False,True
+S02_rush_hour,rush_hour,45,D_lstm_predicted,LSTM,598.5575809943105,True,8183.789404493044,0.0,0.7084000098984689,False,False,True
+S02_rush_hour,rush_hour,45,E_jepa_predicted,JEPA-Traffic,605.8230846478523,True,8183.789404493044,0.0,0.8219000010285527,False,False,True
+S02_rush_hour,rush_hour,45,F_jepa_uncertainty,JEPA-Traffic+UA,602.2303385370087,True,8183.789404493044,60.582306,0.5979000125080347,False,False,True
+S02_rush_hour,rush_hour,45,G_quantum_inspired,SA (classical),602.2303385370087,True,8183.789404493044,0.0,37.69470000406727,False,False,True
+S03_road_blockage,road_blockage,46,A_shortest_distance,,2419.1444577632174,True,27303.42711990174,0.0,0.7429999823216349,False,True,False
+S03_road_blockage,road_blockage,46,B_current_traffic,,1894.5258198629333,True,28578.758832831605,0.0,0.5512000061571598,False,True,False
+S03_road_blockage,road_blockage,46,C_historical,Historical Average,1893.3432880435748,True,28578.758832831605,0.0,0.5718999891541898,False,True,True
+S03_road_blockage,road_blockage,46,D_lstm_predicted,LSTM,1890.455084497962,True,28578.758832831605,0.0,1.0150999878533185,False,True,True
+S03_road_blockage,road_blockage,46,E_jepa_predicted,JEPA-Traffic,1930.735941415966,True,28578.758832831605,0.0,1.192399999126792,False,True,True
+S03_road_blockage,road_blockage,46,F_jepa_uncertainty,JEPA-Traffic+UA,1894.5258198629333,True,28578.758832831605,193.07358,0.8700000180397183,False,True,True
+S03_road_blockage,road_blockage,46,G_quantum_inspired,SA (classical),1894.5258198629333,True,28578.758832831605,0.0,40.0950999755878,False,True,True
+S04_queue_spillback,queue_spillback,47,A_shortest_distance,,1818.573053716073,True,20304.813772998717,0.0,0.8850999874994159,False,False,False
+S04_queue_spillback,queue_spillback,47,B_current_traffic,,1795.9506565428496,True,20674.5191822307,0.0,0.81490000593476,False,False,False
+S04_queue_spillback,queue_spillback,47,C_historical,Historical Average,1794.4254901914674,True,20674.5191822307,0.0,0.8520999981556088,False,False,True
+S04_queue_spillback,queue_spillback,47,D_lstm_predicted,LSTM,1828.2264725027644,True,20674.5191822307,0.0,0.7847000088077039,False,False,True
+S04_queue_spillback,queue_spillback,47,E_jepa_predicted,JEPA-Traffic,1847.5873834035829,True,20674.5191822307,0.0,0.8820999937597662,False,False,True
+S04_queue_spillback,queue_spillback,47,F_jepa_uncertainty,JEPA-Traffic+UA,1795.9506565428496,True,20674.5191822307,184.75874,0.7722000009380281,False,False,True
+S04_queue_spillback,queue_spillback,47,G_quantum_inspired,SA (classical),1795.9506565428496,True,20674.5191822307,0.0,45.92780000530183,False,False,True
+S05_missing_obs,missing_obs,48,A_shortest_distance,,1163.8999508463144,True,15572.015758757228,0.0,0.8159999852068722,False,False,False
+S05_missing_obs,missing_obs,48,B_current_traffic,,1163.8999508463144,True,15572.015758757228,0.0,0.7279000128619373,False,False,False
+S05_missing_obs,missing_obs,48,C_historical,Historical Average,1203.0032722128026,True,15572.015758757228,0.0,0.7400000176858157,False,False,True
+S05_missing_obs,missing_obs,48,D_lstm_predicted,LSTM,1173.0854788098052,True,15572.015758757228,0.0,0.9144999785348773,False,False,True
+S05_missing_obs,missing_obs,48,E_jepa_predicted,JEPA-Traffic,1197.8749595383256,True,15572.015758757228,0.0,1.3296999968588352,False,False,True
+S05_missing_obs,missing_obs,48,F_jepa_uncertainty,JEPA-Traffic+UA,1163.8999508463144,True,15572.015758757228,119.7875,0.9398999973200262,False,False,True
+S05_missing_obs,missing_obs,48,G_quantum_inspired,SA (classical),1163.8999508463144,True,15572.015758757228,0.0,45.00949999783188,False,False,True
+S06_noisy_obs,noisy_obs,49,A_shortest_distance,,1215.688984974945,True,15416.764331053111,0.0,0.6220999930519611,False,False,False
+S06_noisy_obs,noisy_obs,49,B_current_traffic,,1215.688984974945,True,15416.764331053111,0.0,0.5233999982010573,False,False,False
+S06_noisy_obs,noisy_obs,49,C_historical,Historical Average,1211.0277370017868,True,15416.764331053111,0.0,0.5731999990530312,False,False,True
+S06_noisy_obs,noisy_obs,49,D_lstm_predicted,LSTM,1216.5001395641839,True,15416.764331053111,0.0,1.2023999879602343,False,False,True
+S06_noisy_obs,noisy_obs,49,E_jepa_predicted,JEPA-Traffic,1237.7457626559794,True,15416.764331053111,0.0,1.739499974064529,False,False,True
+S06_noisy_obs,noisy_obs,49,F_jepa_uncertainty,JEPA-Traffic+UA,1215.688984974945,True,15416.764331053111,123.77458,0.7216999947559088,False,False,True
+S06_noisy_obs,noisy_obs,49,G_quantum_inspired,SA (classical),1215.688984974945,True,15416.764331053111,0.0,42.66840001218952,False,False,True
+S07_dynamic_reroute,dynamic_reroute,50,A_shortest_distance,,1112.4258694014254,True,11624.082368527832,0.0,1.0261999850627035,True,False,False
+S07_dynamic_reroute,dynamic_reroute,50,B_current_traffic,,1112.4258694014254,True,11624.082368527832,0.0,0.7782000175211579,True,False,False
+S07_dynamic_reroute,dynamic_reroute,50,C_historical,Historical Average,1087.7185706501855,True,11624.082368527832,0.0,0.9689000144135207,True,False,True
+S07_dynamic_reroute,dynamic_reroute,50,D_lstm_predicted,LSTM,1107.58956418235,True,11624.082368527832,0.0,1.0460999910719693,True,False,True
+S07_dynamic_reroute,dynamic_reroute,50,E_jepa_predicted,JEPA-Traffic,1119.5111527137651,True,11624.082368527832,0.0,1.135800004703924,True,False,True
+S07_dynamic_reroute,dynamic_reroute,50,F_jepa_uncertainty,JEPA-Traffic+UA,1112.4258694014254,True,11624.082368527832,111.95112,0.8274999854620546,True,False,True
+S07_dynamic_reroute,dynamic_reroute,50,G_quantum_inspired,SA (classical),1112.4258694014254,True,11624.082368527832,0.0,38.58120000222698,True,False,True
+S01_normal,normal,45,A_shortest_distance,,1363.6543335050892,True,18721.006751310983,0.0,0.6386000022757798,False,False,False
+S01_normal,normal,45,B_current_traffic,,1359.3346399566308,True,19362.084674155016,0.0,0.5507000023499131,False,False,False
+S01_normal,normal,45,C_historical,Historical Average,1322.0225793119896,True,18721.006751310983,0.0,0.5615999980363995,False,False,True
+S01_normal,normal,45,D_lstm_predicted,LSTM,1337.0889062872943,True,18721.006751310983,0.0,1.0292000079061836,False,False,True
+S01_normal,normal,45,E_jepa_predicted,JEPA-Traffic,1363.8867664561074,True,18721.006751310983,0.0,1.240900019183755,False,False,True
+S01_normal,normal,45,F_jepa_uncertainty,JEPA-Traffic+UA,1363.6543335050892,True,18721.006751310983,136.38867,0.9439999994356185,False,False,True
+S01_normal,normal,45,G_quantum_inspired,SA (classical),1363.6543335050892,True,18721.006751310983,0.0,40.874999976949766,False,False,True
+S02_rush_hour,rush_hour,46,A_shortest_distance,,1264.4003012493818,True,15411.70193732752,0.0,0.6050999800208956,False,False,False
+S02_rush_hour,rush_hour,46,B_current_traffic,,1173.4048196202366,True,16180.425395679986,0.0,0.6187999970279634,False,False,False
+S02_rush_hour,rush_hour,46,C_historical,Historical Average,1176.4067872431208,True,16180.425395679986,0.0,0.7468000112567097,False,False,True
+S02_rush_hour,rush_hour,46,D_lstm_predicted,LSTM,1167.7778045853963,True,16180.425395679986,0.0,0.9563000057823956,False,False,True
+S02_rush_hour,rush_hour,46,E_jepa_predicted,JEPA-Traffic,1185.8463905591211,True,16180.425395679986,0.0,1.1660000018309802,False,False,True
+S02_rush_hour,rush_hour,46,F_jepa_uncertainty,JEPA-Traffic+UA,1173.4048196202366,True,16180.425395679986,118.58464,0.614099990343675,False,False,True
+S02_rush_hour,rush_hour,46,G_quantum_inspired,SA (classical),1173.4048196202366,True,16180.425395679986,0.0,40.29100001207553,False,False,True
+S03_road_blockage,road_blockage,47,A_shortest_distance,,968.7187720802408,True,11548.100730370123,0.0,0.8175999973900616,False,True,False
+S03_road_blockage,road_blockage,47,B_current_traffic,,851.6481418079502,True,12111.624668576766,0.0,0.7479999912902713,False,True,False
+S03_road_blockage,road_blockage,47,C_historical,Historical Average,853.4994562092621,True,12111.624668576766,0.0,0.6148999964352697,False,True,True
+S03_road_blockage,road_blockage,47,D_lstm_predicted,LSTM,851.3397526827276,True,11935.142668348757,0.0,1.0212999768555164,False,True,True
+S03_road_blockage,road_blockage,47,E_jepa_predicted,JEPA-Traffic,867.6406257873473,True,11935.142668348757,0.0,1.1648999934550375,False,True,True
+S03_road_blockage,road_blockage,47,F_jepa_uncertainty,JEPA-Traffic+UA,858.944559702175,True,11935.142668348757,86.76407,1.069399993866682,False,True,True
+S03_road_blockage,road_blockage,47,G_quantum_inspired,SA (classical),858.944559702175,True,11935.142668348757,0.0,42.13240000535734,False,True,True
+S04_queue_spillback,queue_spillback,48,A_shortest_distance,,961.1774137212153,True,7951.558148101987,0.0,0.600200000917539,False,False,False
+S04_queue_spillback,queue_spillback,48,B_current_traffic,,961.1774137212153,True,7951.558148101987,0.0,0.5078999965917319,False,False,False
+S04_queue_spillback,queue_spillback,48,C_historical,Historical Average,945.3474461768191,True,7951.558148101987,0.0,0.6478000141214579,False,False,True
+S04_queue_spillback,queue_spillback,48,D_lstm_predicted,LSTM,981.8911287372343,True,7951.558148101987,0.0,0.7103999960236251,False,False,True
+S04_queue_spillback,queue_spillback,48,E_jepa_predicted,JEPA-Traffic,985.4771951021434,True,7951.558148101987,0.0,1.3036000018473715,False,False,True
+S04_queue_spillback,queue_spillback,48,F_jepa_uncertainty,JEPA-Traffic+UA,961.1774137212153,True,7951.558148101987,98.547714,0.7852000126149505,False,False,True
+S04_queue_spillback,queue_spillback,48,G_quantum_inspired,SA (classical),961.1774137212153,True,7951.558148101987,0.0,32.954600028460845,False,False,True
+S05_missing_obs,missing_obs,49,A_shortest_distance,,716.2339250655918,True,7919.6127428524815,0.0,0.8081999840214849,False,False,False
+S05_missing_obs,missing_obs,49,B_current_traffic,,716.2339250655918,True,7919.6127428524815,0.0,0.7093999884091318,False,False,False
+S05_missing_obs,missing_obs,49,C_historical,Historical Average,674.2092697840772,True,7919.6127428524815,0.0,0.6257999921217561,False,False,True
+S05_missing_obs,missing_obs,49,D_lstm_predicted,LSTM,687.312035933235,True,7919.6127428524815,0.0,0.7684000011067837,False,False,True
+S05_missing_obs,missing_obs,49,E_jepa_predicted,JEPA-Traffic,694.2747476763154,True,7919.6127428524815,0.0,1.194800017401576,False,False,True
+S05_missing_obs,missing_obs,49,F_jepa_uncertainty,JEPA-Traffic+UA,716.2339250655918,True,7919.6127428524815,69.427475,0.8025999995879829,False,False,True
+S05_missing_obs,missing_obs,49,G_quantum_inspired,SA (classical),716.2339250655918,True,7919.6127428524815,0.0,38.712100009433925,False,False,True
+S06_noisy_obs,noisy_obs,50,A_shortest_distance,,1535.2602724568633,True,15264.231833344014,0.0,0.9416000102646649,False,False,False
+S06_noisy_obs,noisy_obs,50,B_current_traffic,,1383.3336056131075,True,15866.974259376762,0.0,1.229399989824742,False,False,False
+S06_noisy_obs,noisy_obs,50,C_historical,Historical Average,1356.7749664228763,True,15866.974259376762,0.0,1.1754999868571758,False,False,True
+S06_noisy_obs,noisy_obs,50,D_lstm_predicted,LSTM,1372.3924132531088,True,15866.974259376762,0.0,0.7621999830007553,False,False,True
+S06_noisy_obs,noisy_obs,50,E_jepa_predicted,JEPA-Traffic,1389.5346089342017,True,15866.974259376762,0.0,0.9933999972417951,False,False,True
+S06_noisy_obs,noisy_obs,50,F_jepa_uncertainty,JEPA-Traffic+UA,1383.3336056131075,True,15866.974259376762,138.95346,0.7379000016953796,False,False,True
+S06_noisy_obs,noisy_obs,50,G_quantum_inspired,SA (classical),1383.3336056131075,True,15866.974259376762,0.0,37.56460000295192,False,False,True
+S07_dynamic_reroute,dynamic_reroute,51,A_shortest_distance,,660.2199070368108,True,7844.049289433753,0.0,0.8920000109355897,True,False,False
+S07_dynamic_reroute,dynamic_reroute,51,B_current_traffic,,660.2199070368108,True,7844.049289433753,0.0,0.7630000181961805,True,False,False
+S07_dynamic_reroute,dynamic_reroute,51,C_historical,Historical Average,647.021476317122,True,7844.049289433753,0.0,0.9463999886065722,True,False,True
+S07_dynamic_reroute,dynamic_reroute,51,D_lstm_predicted,LSTM,664.8150940684326,True,7844.049289433753,0.0,0.90819998877123,True,False,True
+S07_dynamic_reroute,dynamic_reroute,51,E_jepa_predicted,JEPA-Traffic,672.2156965419243,True,7844.049289433753,0.0,1.1028999870177358,True,False,True
+S07_dynamic_reroute,dynamic_reroute,51,F_jepa_uncertainty,JEPA-Traffic+UA,660.2199070368108,True,7844.049289433753,67.22157,0.9179000044241548,True,False,True
+S07_dynamic_reroute,dynamic_reroute,51,G_quantum_inspired,SA (classical),660.2199070368108,True,7844.049289433753,0.0,36.33359997184016,True,False,True
+S01_normal,normal,46,A_shortest_distance,,980.7440176387115,True,12336.312659498235,0.0,0.6175999878905714,False,False,False
+S01_normal,normal,46,B_current_traffic,,980.7440176387115,True,12336.312659498235,0.0,0.544899987289682,False,False,False
+S01_normal,normal,46,C_historical,Historical Average,971.3835237443941,True,12336.312659498235,0.0,0.5269000248517841,False,False,True
+S01_normal,normal,46,D_lstm_predicted,LSTM,981.5615749360957,True,12336.312659498235,0.0,0.6955999997444451,False,False,True
+S01_normal,normal,46,E_jepa_predicted,JEPA-Traffic,997.9300121792527,True,12336.312659498235,0.0,0.9317000221926719,False,False,True
+S01_normal,normal,46,F_jepa_uncertainty,JEPA-Traffic+UA,980.7440176387115,True,12336.312659498235,99.793,0.8452000038232654,False,False,True
+S01_normal,normal,46,G_quantum_inspired,SA (classical),980.7440176387115,True,12336.312659498235,0.0,41.69209999963641,False,False,True
+S02_rush_hour,rush_hour,47,A_shortest_distance,,1264.7906303050656,True,15984.26512762326,0.0,0.662900012684986,False,False,False
+S02_rush_hour,rush_hour,47,B_current_traffic,,1166.100687651343,True,16639.711514212242,0.0,0.7804000051692128,False,False,False
+S02_rush_hour,rush_hour,47,C_historical,Historical Average,1179.5574200941883,True,16639.711514212242,0.0,0.7024999940767884,False,False,True
+S02_rush_hour,rush_hour,47,D_lstm_predicted,LSTM,1169.6616435776107,True,16639.711514212242,0.0,1.0875000152736902,False,False,True
+S02_rush_hour,rush_hour,47,E_jepa_predicted,JEPA-Traffic,1192.3006633853252,True,16639.711514212242,0.0,0.9030000073835254,False,False,True
+S02_rush_hour,rush_hour,47,F_jepa_uncertainty,JEPA-Traffic+UA,1166.100687651343,True,16639.711514212242,119.23007,0.7255999953486025,False,False,True
+S02_rush_hour,rush_hour,47,G_quantum_inspired,SA (classical),1166.100687651343,True,16639.711514212242,0.0,42.91170000215061,False,False,True
+S03_road_blockage,road_blockage,48,A_shortest_distance,,988.9182855622616,True,12113.919512234559,0.0,0.6017999839968979,False,True,False
+S03_road_blockage,road_blockage,48,B_current_traffic,,988.9182855622616,True,12113.919512234559,0.0,0.5120999994687736,False,True,False
+S03_road_blockage,road_blockage,48,C_historical,Historical Average,959.6011366688288,True,12113.919512234559,0.0,0.5397000059019774,False,True,True
+S03_road_blockage,road_blockage,48,D_lstm_predicted,LSTM,975.5483082048688,True,12113.919512234559,0.0,0.7879000040702522,False,True,True
+S03_road_blockage,road_blockage,48,E_jepa_predicted,JEPA-Traffic,992.7394281428492,True,12113.919512234559,0.0,1.2412999931257218,False,True,True
+S03_road_blockage,road_blockage,48,F_jepa_uncertainty,JEPA-Traffic+UA,988.9182855622616,True,12113.919512234559,99.27394,0.899500009836629,False,True,True
+S03_road_blockage,road_blockage,48,G_quantum_inspired,SA (classical),988.9182855622616,True,12113.919512234559,0.0,46.13530001370236,False,True,True
+S04_queue_spillback,queue_spillback,49,A_shortest_distance,,1145.3240494141974,True,12146.626621619329,0.0,0.8170999935828149,False,False,False
+S04_queue_spillback,queue_spillback,49,B_current_traffic,,1145.3240494141974,True,12146.626621619329,0.0,0.7232000061776489,False,False,False
+S04_queue_spillback,queue_spillback,49,C_historical,Historical Average,1159.312692316444,True,12146.626621619329,0.0,0.7614000060129911,False,False,True
+S04_queue_spillback,queue_spillback,49,D_lstm_predicted,LSTM,1163.798398702274,True,12146.626621619329,0.0,0.9145000076387078,False,False,True
+S04_queue_spillback,queue_spillback,49,E_jepa_predicted,JEPA-Traffic,1175.4611356816922,True,12146.626621619329,0.0,1.0800999880302697,False,False,True
+S04_queue_spillback,queue_spillback,49,F_jepa_uncertainty,JEPA-Traffic+UA,1145.3240494141974,True,12146.626621619329,117.54612,0.8309000113513321,False,False,True
+S04_queue_spillback,queue_spillback,49,G_quantum_inspired,SA (classical),1145.3240494141974,True,12146.626621619329,0.0,43.81689999718219,False,False,True
+S05_missing_obs,missing_obs,50,A_shortest_distance,,1420.8452457623305,True,15563.188284730231,0.0,0.620599981630221,False,False,False
+S05_missing_obs,missing_obs,50,B_current_traffic,,1420.8452457623305,True,15563.188284730231,0.0,0.7285000174306333,False,False,False
+S05_missing_obs,missing_obs,50,C_historical,Historical Average,1399.0396151040163,True,15563.188284730231,0.0,0.5953999934718013,False,False,True
+S05_missing_obs,missing_obs,50,D_lstm_predicted,LSTM,1447.658257878633,True,15563.188284730231,0.0,0.981999997748062,False,False,True
+S05_missing_obs,missing_obs,50,E_jepa_predicted,JEPA-Traffic,1461.0207916404563,True,15563.188284730231,0.0,1.4646999770775437,False,False,True
+S05_missing_obs,missing_obs,50,F_jepa_uncertainty,JEPA-Traffic+UA,1420.8452457623305,True,15563.188284730231,146.10208,0.751899991882965,False,False,True
+S05_missing_obs,missing_obs,50,G_quantum_inspired,SA (classical),1420.8452457623305,True,15563.188284730231,0.0,41.44010000163689,False,False,True
+S06_noisy_obs,noisy_obs,51,A_shortest_distance,,1617.0348210053583,True,18973.651166951004,0.0,0.8128000190481544,False,False,False
+S06_noisy_obs,noisy_obs,51,B_current_traffic,,1517.1590448605473,True,20065.05970109636,0.0,0.6491999956779182,False,False,False
+S06_noisy_obs,noisy_obs,51,C_historical,Historical Average,1550.6552296201583,True,20065.05970109636,0.0,0.5791999865323305,False,False,True
+S06_noisy_obs,noisy_obs,51,D_lstm_predicted,LSTM,1585.2263238284888,True,18973.651166951004,0.0,1.0289000056218356,False,False,True
+S06_noisy_obs,noisy_obs,51,E_jepa_predicted,JEPA-Traffic,1607.400301867591,True,18973.651166951004,0.0,1.3347999774850905,False,False,True
+S06_noisy_obs,noisy_obs,51,F_jepa_uncertainty,JEPA-Traffic+UA,1617.0348210053583,True,18973.651166951004,160.74004,0.9185000089928508,False,False,True
+S06_noisy_obs,noisy_obs,51,G_quantum_inspired,SA (classical),1617.0348210053583,True,18973.651166951004,0.0,42.36370002035983,False,False,True
+S07_dynamic_reroute,dynamic_reroute,52,A_shortest_distance,,1024.1656364203657,True,15276.605159766255,0.0,0.8310000121127814,True,False,False
+S07_dynamic_reroute,dynamic_reroute,52,B_current_traffic,,943.1833010806905,True,15856.17418745832,0.0,0.7870999979786575,True,False,False
+S07_dynamic_reroute,dynamic_reroute,52,C_historical,Historical Average,976.0703201656968,True,15856.17418745832,0.0,0.9316000214312226,True,False,True
+S07_dynamic_reroute,dynamic_reroute,52,D_lstm_predicted,LSTM,961.0502343496912,True,15856.17418745832,0.0,1.0963999957311898,True,False,True
+S07_dynamic_reroute,dynamic_reroute,52,E_jepa_predicted,JEPA-Traffic,977.9174029318262,True,15856.17418745832,0.0,0.9416000102646649,True,False,True
+S07_dynamic_reroute,dynamic_reroute,52,F_jepa_uncertainty,JEPA-Traffic+UA,943.1833010806905,True,15856.17418745832,97.79175,0.7908999978099018,True,False,True
+S07_dynamic_reroute,dynamic_reroute,52,G_quantum_inspired,SA (classical),943.1833010806905,True,15856.17418745832,0.0,42.19049998209812,True,False,True

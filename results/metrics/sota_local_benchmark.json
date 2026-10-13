@@ -1,0 +1,885 @@
+{
+  "metadata": {
+    "title": "Standardized Local State-of-the-Art Benchmark Suite",
+    "dataset_name": "METR-LA (Los Angeles Highway Traffic Sensors)",
+    "benchmark_date": "2026-10-13",
+    "device": "cpu",
+    "zero_handling_policy": "Speed readings <= 0.0 mph and NaNs masked strictly during metric evaluation.",
+    "hardware_platform": "Windows CPU (Intel/AMD x86_64, PyTorch CPU)",
+    "notes": "Separates controlled multi-seed convergent experiments from full-timeline single-epoch runs."
+  },
+  "controlled_multi_seed_tier": {
+    "metadata": {
+      "title": "Standardized Multi-Seed Local Benchmark Suite",
+      "dataset_name": "METR-LA (Los Angeles Highway Traffic Sensors)",
+      "timesteps_evaluated": 3000,
+      "sample_counts": {
+        "train_windows": 2077,
+        "val_windows": 289,
+        "test_windows": 589
+      },
+      "num_sensors": 207,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "epochs_per_seed": 2,
+      "batch_size": 64,
+      "device": "cpu",
+      "normalization": {
+        "train_mean_mph": 58.991798400878906,
+        "train_std_mph": 12.4119291305542,
+        "fitted_split": "train_only (leakage-free)"
+      },
+      "zero_handling_policy": "Speed readings <= 0.0 mph and NaNs are masked strictly during metric evaluation.",
+      "hardware_platform": "Windows CPU (Intel/AMD x86_64, PyTorch CPU)"
+    },
+    "models": {
+      "Persistence": {
+        "parameters": 0,
+        "mean_train_s": 0.0,
+        "mean_latency_ms": 0.11426333339841221,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 3.636411190032959,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              3.636411190032959,
+              3.636411190032959
+            ],
+            "rmse_mean": 8.566399574279785,
+            "rmse_std": 0.0,
+            "mape_mean": 8.103784561157227,
+            "seed_maes": [
+              3.636411190032959,
+              3.636411190032959,
+              3.636411190032959
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 4.5155134201049805,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              4.5155134201049805,
+              4.5155134201049805
+            ],
+            "rmse_mean": 10.727879524230957,
+            "rmse_std": 0.0,
+            "mape_mean": 10.200332641601562,
+            "seed_maes": [
+              4.5155134201049805,
+              4.5155134201049805,
+              4.5155134201049805
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 6.069724082946777,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              6.069724082946777,
+              6.069724082946777
+            ],
+            "rmse_mean": 13.885085105895996,
+            "rmse_std": 0.0,
+            "mape_mean": 13.703474044799805,
+            "seed_maes": [
+              6.069724082946777,
+              6.069724082946777,
+              6.069724082946777
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 4.5837788581848145,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              4.5837788581848145,
+              4.5837788581848145
+            ],
+            "rmse_mean": 10.939631462097168,
+            "rmse_std": 0.0,
+            "mape_mean": 10.31072998046875,
+            "seed_maes": [
+              4.5837788581848145,
+              4.5837788581848145,
+              4.5837788581848145
+            ]
+          }
+        }
+      },
+      "Historical_Average": {
+        "parameters": 59616,
+        "mean_train_s": 0.3443287213643392,
+        "mean_latency_ms": 3.7321733334313953,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 5.947084426879883,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              5.947084426879883,
+              5.947084426879883
+            ],
+            "rmse_mean": 10.409605026245117,
+            "rmse_std": 0.0,
+            "mape_mean": 16.6523494720459,
+            "seed_maes": [
+              5.947084426879883,
+              5.947084426879883,
+              5.947084426879883
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 5.9595723152160645,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              5.9595723152160645,
+              5.9595723152160645
+            ],
+            "rmse_mean": 10.423751831054688,
+            "rmse_std": 0.0,
+            "mape_mean": 16.569583892822266,
+            "seed_maes": [
+              5.9595723152160645,
+              5.9595723152160645,
+              5.9595723152160645
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 5.977896213531494,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              5.977896213531494,
+              5.977896213531494
+            ],
+            "rmse_mean": 10.450239181518555,
+            "rmse_std": 0.0,
+            "mape_mean": 16.40111541748047,
+            "seed_maes": [
+              5.977896213531494,
+              5.977896213531494,
+              5.977896213531494
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 5.9602274894714355,
+            "mae_std": 0.0,
+            "mae_ci_95": [
+              5.9602274894714355,
+              5.9602274894714355
+            ],
+            "rmse_mean": 10.426213264465332,
+            "rmse_std": 0.0,
+            "mape_mean": 16.552696228027344,
+            "seed_maes": [
+              5.9602274894714355,
+              5.9602274894714355,
+              5.9602274894714355
+            ]
+          }
+        }
+      },
+      "SpatialTemporal_LSTM": {
+        "parameters": 254580,
+        "mean_train_s": 0.5053458213806152,
+        "mean_latency_ms": 1.2359166666252956,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 6.37362543741862,
+            "mae_std": 0.08788716701432629,
+            "mae_ci_95": [
+              6.274171745531912,
+              6.4730791293053285
+            ],
+            "rmse_mean": 9.831395149230957,
+            "rmse_std": 0.11130970306719574,
+            "mape_mean": 17.83270263671875,
+            "seed_maes": [
+              6.476372241973877,
+              6.261683464050293,
+              6.3828206062316895
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 6.403507391611735,
+            "mae_std": 0.06442021456851661,
+            "mae_ci_95": [
+              6.330609056295858,
+              6.476405726927613
+            ],
+            "rmse_mean": 9.825651486714682,
+            "rmse_std": 0.12845065439593523,
+            "mape_mean": 17.68182627360026,
+            "seed_maes": [
+              6.463077545166016,
+              6.314027309417725,
+              6.433417320251465
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 6.691033840179443,
+            "mae_std": 0.04906824056639884,
+            "mae_ci_95": [
+              6.635507898856087,
+              6.7465597815028
+            ],
+            "rmse_mean": 10.014774640401205,
+            "rmse_std": 0.10048855323713536,
+            "mape_mean": 17.932427724202473,
+            "seed_maes": [
+              6.71547794342041,
+              6.622567653656006,
+              6.735055923461914
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 6.480403423309326,
+            "mae_std": 0.045334985304679006,
+            "mae_ci_95": [
+              6.429102058009373,
+              6.53170478860928
+            ],
+            "rmse_mean": 9.874320983886719,
+            "rmse_std": 0.09703300904239395,
+            "mape_mean": 17.80109214782715,
+            "seed_maes": [
+              6.540548324584961,
+              6.431099891662598,
+              6.46956205368042
+            ]
+          }
+        }
+      },
+      "STGCN": {
+        "parameters": 8376,
+        "mean_train_s": 19.10665202140808,
+        "mean_latency_ms": 60.19929333335009,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 5.239528973897298,
+            "mae_std": 0.1972061048405624,
+            "mae_ci_95": [
+              5.016369258374847,
+              5.462688689419749
+            ],
+            "rmse_mean": 8.58423105875651,
+            "rmse_std": 0.14495939424373167,
+            "mape_mean": 14.718645731608072,
+            "seed_maes": [
+              5.159043312072754,
+              5.048521041870117,
+              5.511022567749023
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 5.721346537272136,
+            "mae_std": 0.19540989215780413,
+            "mae_ci_95": [
+              5.500219427746472,
+              5.942473646797799
+            ],
+            "rmse_mean": 9.084856351216635,
+            "rmse_std": 0.18970117332211442,
+            "mape_mean": 15.686965624491373,
+            "seed_maes": [
+              5.728294372558594,
+              5.478621006011963,
+              5.95712423324585
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 7.015652497609456,
+            "mae_std": 0.2601826359681034,
+            "mae_ci_95": [
+              6.72122812837674,
+              7.310076866842172
+            ],
+            "rmse_mean": 10.267345746358236,
+            "rmse_std": 0.18056560328881024,
+            "mape_mean": 18.708136876424152,
+            "seed_maes": [
+              7.344109058380127,
+              6.707793712615967,
+              6.995054721832275
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 5.70077117284139,
+            "mae_std": 0.020041441497003466,
+            "mae_ci_95": [
+              5.678092146820633,
+              5.723450198862146
+            ],
+            "rmse_mean": 9.092034975687662,
+            "rmse_std": 0.05083907900582993,
+            "mape_mean": 15.700770060221354,
+            "seed_maes": [
+              5.677121162414551,
+              5.699068546295166,
+              5.726123809814453
+            ]
+          }
+        }
+      },
+      "Graph_WaveNet": {
+        "parameters": 18316,
+        "mean_train_s": 26.213311274846394,
+        "mean_latency_ms": 91.5974966667515,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 4.427638053894043,
+            "mae_std": 0.19750456019921458,
+            "mae_ci_95": [
+              4.204140604339541,
+              4.651135503448545
+            ],
+            "rmse_mean": 8.366272926330566,
+            "rmse_std": 0.10187810087335349,
+            "mape_mean": 10.952626864115397,
+            "seed_maes": [
+              4.220952033996582,
+              4.368276596069336,
+              4.693685531616211
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 5.218479156494141,
+            "mae_std": 0.1121221276710495,
+            "mae_ci_95": [
+              5.091601024931872,
+              5.345357288056409
+            ],
+            "rmse_mean": 9.230184555053711,
+            "rmse_std": 0.18946632391104123,
+            "mape_mean": 13.000474294026693,
+            "seed_maes": [
+              5.059925079345703,
+              5.299340724945068,
+              5.29617166519165
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 6.425498167673747,
+            "mae_std": 0.21710162554487492,
+            "mae_ci_95": [
+              6.179824551052063,
+              6.6711717842954315
+            ],
+            "rmse_mean": 10.065319697062174,
+            "rmse_std": 0.16796201650810538,
+            "mape_mean": 15.991429964701334,
+            "seed_maes": [
+              6.21942138671875,
+              6.725637912750244,
+              6.331435203552246
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 5.297085126241048,
+            "mae_std": 0.06757067492446618,
+            "mae_ci_95": [
+              5.220621709421396,
+              5.3735485430607
+            ],
+            "rmse_mean": 9.175315221150717,
+            "rmse_std": 0.10959865587109903,
+            "mape_mean": 13.055006663004557,
+            "seed_maes": [
+              5.218140125274658,
+              5.289926528930664,
+              5.383188724517822
+            ]
+          }
+        }
+      },
+      "SpatialTemporal_Transformer": {
+        "parameters": 10124,
+        "mean_train_s": 78.38102372487386,
+        "mean_latency_ms": 165.30103999987963,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 4.717893918355306,
+            "mae_std": 0.11516404110057625,
+            "mae_ci_95": [
+              4.587573537699756,
+              4.848214299010856
+            ],
+            "rmse_mean": 8.256146748860678,
+            "rmse_std": 0.21247670253568335,
+            "mape_mean": 11.968409856160482,
+            "seed_maes": [
+              4.5585761070251465,
+              4.826836109161377,
+              4.7682695388793945
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 5.410253047943115,
+            "mae_std": 0.29106798806706824,
+            "mae_ci_95": [
+              5.080878612667626,
+              5.739627483218604
+            ],
+            "rmse_mean": 9.14351495107015,
+            "rmse_std": 0.025025591799952285,
+            "mape_mean": 14.249003410339355,
+            "seed_maes": [
+              4.998682975769043,
+              5.609839916229248,
+              5.622236251831055
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 6.719754536946614,
+            "mae_std": 0.06572611895137591,
+            "mae_ci_95": [
+              6.645378431706656,
+              6.794130642186572
+            ],
+            "rmse_mean": 9.986552238464355,
+            "rmse_std": 0.11853335714230927,
+            "mape_mean": 16.838185628255207,
+            "seed_maes": [
+              6.713871479034424,
+              6.803032398223877,
+              6.642359733581543
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 5.47221581141154,
+            "mae_std": 0.10019778106577362,
+            "mae_ci_95": [
+              5.358831348305306,
+              5.585600274517774
+            ],
+            "rmse_mean": 9.071625709533691,
+            "rmse_std": 0.12087821832791039,
+            "mape_mean": 13.924728393554688,
+            "seed_maes": [
+              5.330514907836914,
+              5.542883396148682,
+              5.543249130249023
+            ]
+          }
+        }
+      },
+      "JEPAGraph": {
+        "parameters": 12268,
+        "mean_train_s": 29.968488613764446,
+        "mean_latency_ms": 59.14144666667198,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 5.147709051767985,
+            "mae_std": 0.41509559301807036,
+            "mae_ci_95": [
+              4.677984169125901,
+              5.617433934410069
+            ],
+            "rmse_mean": 8.555830001831055,
+            "rmse_std": 0.213406204864653,
+            "mape_mean": 13.3583132425944,
+            "seed_maes": [
+              4.9246978759765625,
+              5.72948694229126,
+              4.788942337036133
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 5.86244535446167,
+            "mae_std": 0.21957494448781342,
+            "mae_ci_95": [
+              5.613972913979291,
+              6.110917794944049
+            ],
+            "rmse_mean": 9.211016337076822,
+            "rmse_std": 0.1303705180875101,
+            "mape_mean": 15.081810315450033,
+            "seed_maes": [
+              5.927950382232666,
+              6.092564582824707,
+              5.566821098327637
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 6.839507897694905,
+            "mae_std": 0.11872567679410971,
+            "mae_ci_95": [
+              6.705157146839578,
+              6.973858648550233
+            ],
+            "rmse_mean": 10.233154296875,
+            "rmse_std": 0.29220379867724317,
+            "mape_mean": 16.985829035441082,
+            "seed_maes": [
+              6.673055648803711,
+              6.941810607910156,
+              6.90365743637085
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 5.769160906473796,
+            "mae_std": 0.1337329817698067,
+            "mae_ci_95": [
+              5.6178277913461105,
+              5.920494021601481
+            ],
+            "rmse_mean": 9.304366747538248,
+            "rmse_std": 0.0980328370223357,
+            "mape_mean": 14.481991449991861,
+            "seed_maes": [
+              5.615517616271973,
+              5.941492080688477,
+              5.7504730224609375
+            ]
+          }
+        }
+      },
+      "JEPAGraph_DirectRegression": {
+        "parameters": 12268,
+        "mean_train_s": 30.30583095550537,
+        "mean_latency_ms": 60.37960000003295,
+        "horizons": {
+          "15_min_step3": {
+            "mae_mean": 4.8472903569539385,
+            "mae_std": 0.12105100698844044,
+            "mae_ci_95": [
+              4.710308247271854,
+              4.984272466636023
+            ],
+            "rmse_mean": 8.471368471781412,
+            "rmse_std": 0.1763225097097526,
+            "mape_mean": 12.513986269632975,
+            "seed_maes": [
+              5.012188911437988,
+              4.725011825561523,
+              4.804670333862305
+            ]
+          },
+          "30_min_step6": {
+            "mae_mean": 5.732430775960286,
+            "mae_std": 0.11252068423554686,
+            "mae_ci_95": [
+              5.60510163518801,
+              5.859759916732562
+            ],
+            "rmse_mean": 9.348233222961426,
+            "rmse_std": 0.020943364336271295,
+            "mape_mean": 14.290533383687338,
+            "seed_maes": [
+              5.589826583862305,
+              5.742582321166992,
+              5.8648834228515625
+            ]
+          },
+          "60_min_step12": {
+            "mae_mean": 6.701143900553386,
+            "mae_std": 0.2985035006683304,
+            "mae_ci_95": [
+              6.36335539068217,
+              7.038932410424602
+            ],
+            "rmse_mean": 10.311816533406576,
+            "rmse_std": 0.2461832745429945,
+            "mape_mean": 16.45726776123047,
+            "seed_maes": [
+              6.948324203491211,
+              6.87391996383667,
+              6.281187534332275
+            ]
+          },
+          "average_steps_1_to_12": {
+            "mae_mean": 5.733390808105469,
+            "mae_std": 0.12484848158698224,
+            "mae_ci_95": [
+              5.5921114513792345,
+              5.874670164831703
+            ],
+            "rmse_mean": 9.312104225158691,
+            "rmse_std": 0.01312873862533316,
+            "mape_mean": 14.395227750142416,
+            "seed_maes": [
+              5.881434917449951,
+              5.742692947387695,
+              5.57604455947876
+            ]
+          }
+        }
+      }
+    },
+    "comparison_metrics": {
+      "15_min_step3": {
+        "jepa_improvement_over_persistence_pct": -41.56014770489496,
+        "jepa_improvement_over_historical_average_pct": 13.44146673786649,
+        "jepa_improvement_over_spatialtemporal_lstm_pct": 19.23420818634022,
+        "jepa_improvement_over_stgcn_pct": 1.7524461184726403,
+        "jepa_improvement_over_graph_wavenet_pct": -16.263095336816217,
+        "jepa_improvement_over_spatialtemporal_transformer_pct": -9.110317884436801,
+        "jepa_improvement_over_jepagraph_directregression_pct": -6.197662460699619
+      },
+      "30_min_step6": {
+        "jepa_improvement_over_persistence_pct": -29.828987515784526,
+        "jepa_improvement_over_historical_average_pct": 1.6297639430669983,
+        "jepa_improvement_over_spatialtemporal_lstm_pct": 8.449463771351757,
+        "jepa_improvement_over_stgcn_pct": -2.466181977797281,
+        "jepa_improvement_over_graph_wavenet_pct": -12.340112485955704,
+        "jepa_improvement_over_spatialtemporal_transformer_pct": -8.358062044629694,
+        "jepa_improvement_over_jepagraph_directregression_pct": -2.268053179928788
+      },
+      "60_min_step12": {
+        "jepa_improvement_over_persistence_pct": -12.68235267746153,
+        "jepa_improvement_over_historical_average_pct": -14.413292793760407,
+        "jepa_improvement_over_spatialtemporal_lstm_pct": -2.2190002481212994,
+        "jepa_improvement_over_stgcn_pct": 2.510737240400249,
+        "jepa_improvement_over_graph_wavenet_pct": -6.443231625277144,
+        "jepa_improvement_over_spatialtemporal_transformer_pct": -1.7821091542832705,
+        "jepa_improvement_over_jepagraph_directregression_pct": -2.0647817625598726
+      },
+      "average_steps_1_to_12": {
+        "jepa_improvement_over_persistence_pct": -25.860367285659045,
+        "jepa_improvement_over_historical_average_pct": 3.2056927916787257,
+        "jepa_improvement_over_spatialtemporal_lstm_pct": 10.97528148135448,
+        "jepa_improvement_over_stgcn_pct": -1.1996575824375573,
+        "jepa_improvement_over_graph_wavenet_pct": -8.911991576162293,
+        "jepa_improvement_over_spatialtemporal_transformer_pct": -5.426414185694549,
+        "jepa_improvement_over_jepagraph_directregression_pct": -0.6238908102646316
+      }
+    },
+    "best_eligible_baselines": {
+      "15_min_step3": {
+        "best_baseline_name": "Persistence",
+        "best_baseline_mae": 3.636411190032959,
+        "jepa_mae": 5.147709051767985,
+        "relative_gain_pct": -41.56014770489496
+      },
+      "30_min_step6": {
+        "best_baseline_name": "Persistence",
+        "best_baseline_mae": 4.5155134201049805,
+        "jepa_mae": 5.86244535446167,
+        "relative_gain_pct": -29.828987515784526
+      },
+      "60_min_step12": {
+        "best_baseline_name": "Historical_Average",
+        "best_baseline_mae": 5.977896213531494,
+        "jepa_mae": 6.839507897694905,
+        "relative_gain_pct": -14.413292793760407
+      },
+      "average_steps_1_to_12": {
+        "best_baseline_name": "Persistence",
+        "best_baseline_mae": 4.5837788581848145,
+        "jepa_mae": 5.769160906473796,
+        "relative_gain_pct": -25.860367285659045
+      }
+    }
+  },
+  "full_timeline_tier": {
+    "metadata": {
+      "dataset_name": "METR-LA (Los Angeles Highway Traffic Sensors \u2014 Complete Timeline)",
+      "source": "Zenodo (10.5281/zenodo.5724362, CC BY 4.0)",
+      "total_dataset_timesteps": 34272,
+      "timesteps_evaluated": 34272,
+      "sample_counts": {
+        "train_windows": 23967,
+        "val_windows": 3416,
+        "test_windows": 6844
+      },
+      "prediction_counts": {
+        "raw_test_predictions": 17000496,
+        "valid_unmasked_predictions": 14940228,
+        "masked_missing_predictions": 2060268,
+        "valid_percentage": 87.88113005644071
+      },
+      "normalization": {
+        "train_mean_mph": 58.58426284790039,
+        "train_std_mph": 12.822882652282715,
+        "fitted_split": "train_only (leakage-free)"
+      },
+      "num_sensors": 207,
+      "seed": 42,
+      "epochs": 1,
+      "batch_size": 64,
+      "device": "cpu",
+      "resource_note": "Evaluated on full 34,272 timesteps for 1 complete epoch per neural architecture on CPU."
+    },
+    "models": {
+      "Persistence": {
+        "parameters": 0,
+        "train_s": 0.0,
+        "latency_ms": 0.1903429894520962,
+        "horizons": {
+          "15_min_step3": {
+            "MAE": 4.0175401579404575,
+            "RMSE": 8.695498594976879,
+            "MAPE": 9.398546172619202
+          },
+          "30_min_step6": {
+            "MAE": 5.095234318964343,
+            "RMSE": 11.135297162479631,
+            "MAPE": 12.219381856932046
+          },
+          "60_min_step12": {
+            "MAE": 6.798027833621221,
+            "RMSE": 14.213605640422884,
+            "MAPE": 16.72423537010406
+          },
+          "average_steps_1_to_12": {
+            "MAE": 5.141180752322271,
+            "RMSE": 11.271354138597284,
+            "MAPE": 12.342839386229999
+          }
+        }
+      },
+      "Historical_Average": {
+        "parameters": 59616,
+        "train_s": 6.990914583206177,
+        "latency_ms": 8.067268225153317,
+        "horizons": {
+          "15_min_step3": {
+            "MAE": 5.15475703372231,
+            "RMSE": 9.00448700738438,
+            "MAPE": 16.63124339723774
+          },
+          "30_min_step6": {
+            "MAE": 5.154883787319622,
+            "RMSE": 9.004628803720287,
+            "MAPE": 16.631539727404164
+          },
+          "60_min_step12": {
+            "MAE": 5.155227667971769,
+            "RMSE": 9.004938145564914,
+            "MAPE": 16.632345501776726
+          },
+          "average_steps_1_to_12": {
+            "MAE": 5.154935865520258,
+            "RMSE": 9.004660719354156,
+            "MAPE": 16.631649259510965
+          }
+        }
+      },
+      "SpatialTemporal_LSTM": {
+        "parameters": 254580,
+        "train_s": 4.467485666275024,
+        "latency_ms": 3.0027925222894507,
+        "horizons": {
+          "15_min_step3": {
+            "MAE": 6.078337711225643,
+            "RMSE": 9.592939327638678,
+            "MAPE": 15.573478558231562
+          },
+          "30_min_step6": {
+            "MAE": 6.481501081861531,
+            "RMSE": 10.433081008708829,
+            "MAPE": 16.246009219616198
+          },
+          "60_min_step12": {
+            "MAE": 7.026598283221157,
+            "RMSE": 11.372491979280618,
+            "MAPE": 17.773861241901013
+          },
+          "average_steps_1_to_12": {
+            "MAE": 6.487510648839747,
+            "RMSE": 10.411317050239308,
+            "MAPE": 16.41482817397432
+          }
+        }
+      },
+      "STGCN": {
+        "parameters": 8376,
+        "train_s": 159.67307662963867,
+        "latency_ms": 89.15916448633108,
+        "horizons": {
+          "15_min_step3": {
+            "MAE": 4.580209526871376,
+            "RMSE": 9.009079282146073,
+            "MAPE": 11.859172085460106
+          },
+          "30_min_step6": {
+            "MAE": 5.490642821715387,
+            "RMSE": 10.485883537451377,
+            "MAPE": 14.4359448928789
+          },
+          "60_min_step12": {
+            "MAE": 6.957789300065422,
+            "RMSE": 12.39394059923686,
+            "MAPE": 18.74698802304554
+          },
+          "average_steps_1_to_12": {
+            "MAE": 5.526313747730289,
+            "RMSE": 10.459290703054938,
+            "MAPE": 14.610347650296067
+          }
+        }
+      },
+      "JEPAGraph": {
+        "parameters": 12268,
+        "train_s": 238.55678296089172,
+        "latency_ms": 89.52013551633996,
+        "horizons": {
+          "15_min_step3": {
+            "MAE": 4.286265719954906,
+            "RMSE": 8.510161808114942,
+            "MAPE": 11.365155099497306
+          },
+          "30_min_step6": {
+            "MAE": 5.159334128718584,
+            "RMSE": 10.220194768816423,
+            "MAPE": 13.98353445887904
+          },
+          "60_min_step12": {
+            "MAE": 6.7463100574963795,
+            "RMSE": 12.237666329610155,
+            "MAPE": 18.717195329530814
+          },
+          "average_steps_1_to_12": {
+            "MAE": 5.234386158396269,
+            "RMSE": 10.197525984979078,
+            "MAPE": 14.32801692585657
+          }
+        }
+      },
+      "JEPAGraph_DirectRegression": {
+        "parameters": 12268,
+        "train_s": 229.56335759162903,
+        "latency_ms": 89.575210280736,
+        "horizons": {
+          "15_min_step3": {
+            "MAE": 4.575043140517511,
+            "RMSE": 8.628253471771528,
+            "MAPE": 11.408787210620492
+          },
+          "30_min_step6": {
+            "MAE": 5.527824446552513,
+            "RMSE": 10.277296299961641,
+            "MAPE": 13.915999506120675
+          },
+          "60_min_step12": {
+            "MAE": 7.215158448255141,
+            "RMSE": 12.32252386356706,
+            "MAPE": 18.491432945204807
+          },
+          "average_steps_1_to_12": {
+            "MAE": 5.670987334967796,
+            "RMSE": 10.338818748955164,
+            "MAPE": 14.262506978955576
+          }
+        }
+      }
+    },
+    "comparison_metrics": {
+      "15_min_step3": {
+        "jepa_improvement_over_stgcn_pct": 6.417693452492678,
+        "jepa_improvement_over_direct_regression_pct": 6.31201524648225
+      },
+      "30_min_step6": {
+        "jepa_improvement_over_stgcn_pct": 6.034060195765849,
+        "jepa_improvement_over_direct_regression_pct": 6.666100224361183
+      },
+      "60_min_step12": {
+        "jepa_improvement_over_stgcn_pct": 3.03946028614368,
+        "jepa_improvement_over_direct_regression_pct": 6.498102489656959
+      },
+      "average_steps_1_to_12": {
+        "jepa_improvement_over_stgcn_pct": 5.282501187232042,
+        "jepa_improvement_over_direct_regression_pct": 7.698856491521438
+      }
+    }
+  }
+}

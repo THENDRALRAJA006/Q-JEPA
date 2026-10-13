@@ -1,0 +1,28 @@
+{
+  "source": "synthetic",
+  "generator": "TrafficSimulator (Surakshit Bharat Q-JEPA)",
+  "rows": 28224,
+  "unique_edges": 98,
+  "time_steps": 288,
+  "time_step_minutes": 5,
+  "features": [
+    "step",
+    "time_minutes",
+    "hour_of_day",
+    "day_of_week",
+    "edge_id",
+    "u",
+    "v",
+    "length_m",
+    "baseline_speed_kmh",
+    "gt_speed_kmh",
+    "observed_speed_kmh",
+    "flow_veh_per_hour",
+    "congestion_level",
+    "is_missing",
+    "is_noisy",
+    "has_incident",
+    "is_closed"
+  ],
+  "note": "All data is synthetically generated. NOT real traffic data."
+}

@@ -1,0 +1,32 @@
+{
+  "target_dataset": "metr_la",
+  "is_pretrained": true,
+  "freeze_backbone": false,
+  "subsample_ratio": 1.0,
+  "train_samples": 256,
+  "test_samples": 512,
+  "train_duration_seconds": 10.46,
+  "variable_type": "speed",
+  "variable_units": "mph",
+  "best_val_loss": 0.1338,
+  "metrics_by_horizon": {
+    "15m": {
+      "mae": 3.8089,
+      "rmse": 7.0421,
+      "mape": 10.71,
+      "valid_samples": 93290
+    },
+    "30m": {
+      "mae": 4.6056,
+      "rmse": 8.5984,
+      "mape": 12.93,
+      "valid_samples": 92274
+    },
+    "60m": {
+      "mae": 5.9231,
+      "rmse": 10.7525,
+      "mape": 16.91,
+      "valid_samples": 92895
+    }
+  }
+}

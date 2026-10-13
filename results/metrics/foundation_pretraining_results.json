@@ -1,0 +1,67 @@
+{
+  "model_scale": "tiny",
+  "device": "cpu",
+  "parameter_counts": {
+    "total_parameters": 34851,
+    "trainable_parameters": 20003,
+    "online_encoder": 14848,
+    "target_encoder": 14848,
+    "predictor": 3520,
+    "decoders": 1090
+  },
+  "trained_epochs": 3,
+  "best_val_loss": 0.39999169623479247,
+  "total_training_seconds": 30.97,
+  "checkpoint_path": "models\\foundation\\jepagraph_fm_tiny.pt",
+  "mixture_datasets": [
+    "metr_la",
+    "pems_bay",
+    "pems04",
+    "pems08"
+  ],
+  "loss_weights": {
+    "w_jepa": 1.0,
+    "w_mask": 0.5,
+    "w_sup": 1.0,
+    "w_temp": 0.05,
+    "huber_delta": 1.0
+  },
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.7249637339264154,
+      "train_jepa": 0.255992995807901,
+      "train_mask": 0.20730331970844418,
+      "train_sup": 0.36501023382879794,
+      "val_loss": 0.5165969068184495,
+      "val_jepa": 0.1604616993572563,
+      "val_mask": 0.14864300936460495,
+      "val_sup": 0.28181333071552217,
+      "epoch_duration_seconds": 10.36
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.5015200078487396,
+      "train_jepa": 0.15524923359043896,
+      "train_mask": 0.14430999429896474,
+      "train_sup": 0.2732319619972259,
+      "val_loss": 0.43723411997780204,
+      "val_jepa": 0.1269317928235978,
+      "val_mask": 0.13916035811416805,
+      "val_sup": 0.2407207756768912,
+      "epoch_duration_seconds": 10.11
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.44488246086984873,
+      "train_jepa": 0.13158110703807324,
+      "train_mask": 0.13097976392600685,
+      "train_sup": 0.24662601936142892,
+      "val_loss": 0.39999169623479247,
+      "val_jepa": 0.10732045862823725,
+      "val_mask": 0.11987542815040797,
+      "val_sup": 0.23273051343858242,
+      "epoch_duration_seconds": 10.47
+    }
+  ]
+}

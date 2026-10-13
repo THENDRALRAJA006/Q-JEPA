@@ -1,0 +1,41 @@
+# Surakshit Bharat Q-JEPA Traffic — Python dependencies
+# Install with: pip install -r requirements.txt
+
+# Core ML / data
+torch>=2.0.0
+numpy>=1.24.0
+pandas>=1.5.0
+scikit-learn>=1.2.0
+matplotlib>=3.7.0
+
+# Web framework / API
+fastapi>=0.115.0
+uvicorn[standard]>=0.23.0
+httpx>=0.24.0
+pydantic>=2.0.0
+
+# Dashboard
+streamlit>=1.30.0
+plotly>=7.0.0
+folium>=0.14.0
+streamlit-folium>=0.15.0
+
+# Graph / simulation
+networkx>=3.1.0
+
+# Computer vision (optional, graceful fallback if absent)
+opencv-python>=4.8.0
+
+# Config / serialisation
+pyyaml>=6.0
+pyarrow>=12.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# Optional: hyperparameter tuning
+# optuna>=3.3.0
+
+# Optional: simulated annealing / QUBO
+# simanneal>=0.5.0

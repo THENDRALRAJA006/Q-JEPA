@@ -1,0 +1,162 @@
+{
+  "timestamp": "2026-10-13T18:02:19.988042",
+  "total_journeys": 245,
+  "model_availability": {
+    "LSTM": true,
+    "JEPA-Traffic": true
+  },
+  "strategies": {
+    "A_shortest_distance": {
+      "strategy_name": "A: Shortest Distance",
+      "n_journeys": 35,
+      "n_feasible": 35,
+      "unreachable_rate": 0.0,
+      "mean_s": 1172.791002436826,
+      "median_s": 1112.4258694014254,
+      "p90_s": 1792.4086672223336,
+      "mean_improvement_pct_vs_A": 0.0,
+      "improvement_std_pct": 0.0,
+      "ci_95_lower": 0.0,
+      "ci_95_upper": 0.0,
+      "p_value_vs_A": 1.0,
+      "aggregate_improvement_pct_vs_A": 0.0,
+      "mean_compute_ms": 0.8174057143540787,
+      "n_with_forecast": 0,
+      "mean_s_incident": 859.5626488155546,
+      "mean_s_normal": 1224.9957280403712
+    },
+    "B_current_traffic": {
+      "strategy_name": "B: Current Traffic",
+      "n_journeys": 35,
+      "n_feasible": 35,
+      "unreachable_rate": 0.0,
+      "mean_s": 1112.3191496440197,
+      "median_s": 1112.4258694014254,
+      "p90_s": 1730.5750244262947,
+      "mean_improvement_pct_vs_A": 3.9467426656940146,
+      "improvement_std_pct": 5.51965014459109,
+      "ci_95_lower": 2.0506765017886126,
+      "ci_95_upper": 5.8428088295994165,
+      "p_value_vs_A": 0.0018427096472860365,
+      "aggregate_improvement_pct_vs_A": 5.156234373145577,
+      "mean_compute_ms": 0.7097571447957307,
+      "n_with_forecast": 0,
+      "mean_s_incident": 836.2527659620655,
+      "mean_s_normal": 1158.3302135910124
+    },
+    "C_historical": {
+      "strategy_name": "C: Historical Average",
+      "n_journeys": 35,
+      "n_feasible": 35,
+      "unreachable_rate": 0.0,
+      "mean_s": 1113.135543007791,
+      "median_s": 1087.7185706501855,
+      "p90_s": 1735.1175298621786,
+      "mean_improvement_pct_vs_A": 3.8513199547897177,
+      "improvement_std_pct": 5.220846253650308,
+      "ci_95_lower": 2.057896518668663,
+      "ci_95_upper": 5.644743390910772,
+      "p_value_vs_A": 0.0014021947336016662,
+      "aggregate_improvement_pct_vs_A": 5.086623218039933,
+      "mean_compute_ms": 0.7237314271541047,
+      "n_with_forecast": 35,
+      "mean_s_incident": 838.4344978790534,
+      "mean_s_normal": 1158.9190505292474
+    },
+    "D_lstm_predicted": {
+      "strategy_name": "D: LSTM Predicted",
+      "n_journeys": 35,
+      "n_feasible": 35,
+      "unreachable_rate": 0.0,
+      "mean_s": 1117.5963689139935,
+      "median_s": 1107.58956418235,
+      "p90_s": 1752.3435883220645,
+      "mean_improvement_pct_vs_A": 3.3065632263084295,
+      "improvement_std_pct": 5.954246842719248,
+      "ci_95_lower": 1.2612078732914132,
+      "ci_95_upper": 5.351918579325446,
+      "p_value_vs_A": 0.004264555959586299,
+      "aggregate_improvement_pct_vs_A": 4.706263384366777,
+      "mean_compute_ms": 0.9355942810153854,
+      "n_with_forecast": 35,
+      "mean_s_incident": 842.8966078859241,
+      "mean_s_normal": 1163.3796624186718
+    },
+    "E_jepa_predicted": {
+      "strategy_name": "E: JEPA Predicted",
+      "n_journeys": 35,
+      "n_feasible": 35,
+      "unreachable_rate": 0.0,
+      "mean_s": 1134.7922738659847,
+      "median_s": 1119.5111527137651,
+      "p90_s": 1774.5210811849704,
+      "mean_improvement_pct_vs_A": 1.8623608362484336,
+      "improvement_std_pct": 5.877292458685819,
+      "ci_95_lower": -0.15655976095838908,
+      "ci_95_upper": 3.881281433455256,
+      "p_value_vs_A": 0.032972730561585346,
+      "aggregate_improvement_pct_vs_A": 3.240025587840238,
+      "mean_compute_ms": 1.1796828575565346,
+      "n_with_forecast": 35,
+      "mean_s_incident": 854.9492852683146,
+      "mean_s_normal": 1181.4327719655967
+    },
+    "F_jepa_uncertainty": {
+      "strategy_name": "F: JEPA + Uncertainty",
+      "n_journeys": 35,
+      "n_feasible": 35,
+      "unreachable_rate": 0.0,
+      "mean_s": 1115.5046321465193,
+      "median_s": 1112.4258694014254,
+      "p90_s": 1730.5750244262947,
+      "mean_improvement_pct_vs_A": 3.739701157693354,
+      "improvement_std_pct": 5.519150555856074,
+      "ci_95_lower": 1.843806608522857,
+      "ci_95_upper": 5.635595706863851,
+      "p_value_vs_A": 0.0030216281141458015,
+      "aggregate_improvement_pct_vs_A": 4.884618842681858,
+      "mean_compute_ms": 0.8276085710219506,
+      "n_with_forecast": 35,
+      "mean_s_incident": 836.2527659620655,
+      "mean_s_normal": 1162.0466098439285
+    },
+    "G_quantum_inspired": {
+      "strategy_name": "G: Quantum-Inspired SA",
+      "n_journeys": 35,
+      "n_feasible": 35,
+      "unreachable_rate": 0.0,
+      "mean_s": 1115.5046321465193,
+      "median_s": 1112.4258694014254,
+      "p90_s": 1730.5750244262947,
+      "mean_improvement_pct_vs_A": 3.739701157693354,
+      "improvement_std_pct": 5.519150555856074,
+      "ci_95_lower": 1.843806608522857,
+      "ci_95_upper": 5.635595706863851,
+      "p_value_vs_A": 0.0030216281141458015,
+      "aggregate_improvement_pct_vs_A": 4.884618842681858,
+      "mean_compute_ms": 40.95212571722056,
+      "n_with_forecast": 35,
+      "mean_s_incident": 836.2527659620655,
+      "mean_s_normal": 1162.0466098439285
+    }
+  },
+  "forecasting_metrics": {
+    "persistence": {
+      "MAE": 0.036070264875888824,
+      "RMSE": 0.045034121721982956
+    },
+    "historical_average": {
+      "MAE": 0.07170076532277747,
+      "RMSE": 0.08875827059888303
+    },
+    "lstm": {
+      "MAE": 0.028912236914038658,
+      "RMSE": 0.036459580063819885
+    },
+    "jepa": {
+      "MAE": 0.029774382710456848,
+      "RMSE": 0.037634219974279404
+    }
+  },
+  "note": "[SIMULATED EXPERIMENTS \u2014 Synthetic data only]"
+}

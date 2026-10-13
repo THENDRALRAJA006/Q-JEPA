@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# PyTorch / ML checkpoints (weights can be re-trained or downloaded via scripts)
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Large Raw / Processed Data Files (Use scripts/download_traffic_datasets.py)
+data/metr_la/*.csv
+data/metr_la/*.pkl
+data/raw/*
+data/processed/*
+data/pems*/*
+data/synthetic/*.csv
+data/synthetic/*.parquet
+*.h5
+*.npz
+
+# Keep directory structure stubs
+!data/**/.gitkeep
+!models/**/.gitkeep
+!data/synthetic/*_meta.json
+
+# Streamlit
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Environment & Secrets
+.env
+.env.local
+*.env
+
+# Logs
+*.log
+logs/
+
+# Results (keep generated benchmark figures)
+!results/figures/*.png
+!results/figures/*.svg
+
+# pytest & coverage
+.pytest_cache/
+.coverage
+htmlcov/

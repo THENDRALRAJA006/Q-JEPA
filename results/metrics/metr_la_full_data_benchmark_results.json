@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "dataset_name": "METR-LA (Los Angeles Highway Traffic Sensors \u2014 Complete Timeline)",
+    "source": "Zenodo (10.5281/zenodo.5724362, CC BY 4.0)",
+    "total_dataset_timesteps": 34272,
+    "timesteps_evaluated": 34272,
+    "sample_counts": {
+      "train_windows": 23967,
+      "val_windows": 3416,
+      "test_windows": 6844
+    },
+    "prediction_counts": {
+      "raw_test_predictions": 17000496,
+      "valid_unmasked_predictions": 14940228,
+      "masked_missing_predictions": 2060268,
+      "valid_percentage": 87.88113005644071
+    },
+    "normalization": {
+      "train_mean_mph": 58.58426284790039,
+      "train_std_mph": 12.822882652282715,
+      "fitted_split": "train_only (leakage-free)"
+    },
+    "num_sensors": 207,
+    "seed": 42,
+    "epochs": 1,
+    "batch_size": 64,
+    "device": "cpu",
+    "resource_note": "Evaluated on full 34,272 timesteps for 1 complete epoch per neural architecture on CPU."
+  },
+  "models": {
+    "Persistence": {
+      "parameters": 0,
+      "train_s": 0.0,
+      "latency_ms": 0.1903429894520962,
+      "horizons": {
+        "15_min_step3": {
+          "MAE": 4.0175401579404575,
+          "RMSE": 8.695498594976879,
+          "MAPE": 9.398546172619202
+        },
+        "30_min_step6": {
+          "MAE": 5.095234318964343,
+          "RMSE": 11.135297162479631,
+          "MAPE": 12.219381856932046
+        },
+        "60_min_step12": {
+          "MAE": 6.798027833621221,
+          "RMSE": 14.213605640422884,
+          "MAPE": 16.72423537010406
+        },
+        "average_steps_1_to_12": {
+          "MAE": 5.141180752322271,
+          "RMSE": 11.271354138597284,
+          "MAPE": 12.342839386229999
+        }
+      }
+    },
+    "Historical_Average": {
+      "parameters": 59616,
+      "train_s": 6.990914583206177,
+      "latency_ms": 8.067268225153317,
+      "horizons": {
+        "15_min_step3": {
+          "MAE": 5.15475703372231,
+          "RMSE": 9.00448700738438,
+          "MAPE": 16.63124339723774
+        },
+        "30_min_step6": {
+          "MAE": 5.154883787319622,
+          "RMSE": 9.004628803720287,
+          "MAPE": 16.631539727404164
+        },
+        "60_min_step12": {
+          "MAE": 5.155227667971769,
+          "RMSE": 9.004938145564914,
+          "MAPE": 16.632345501776726
+        },
+        "average_steps_1_to_12": {
+          "MAE": 5.154935865520258,
+          "RMSE": 9.004660719354156,
+          "MAPE": 16.631649259510965
+        }
+      }
+    },
+    "SpatialTemporal_LSTM": {
+      "parameters": 254580,
+      "train_s": 4.467485666275024,
+      "latency_ms": 3.0027925222894507,
+      "horizons": {
+        "15_min_step3": {
+          "MAE": 6.078337711225643,
+          "RMSE": 9.592939327638678,
+          "MAPE": 15.573478558231562
+        },
+        "30_min_step6": {
+          "MAE": 6.481501081861531,
+          "RMSE": 10.433081008708829,
+          "MAPE": 16.246009219616198
+        },
+        "60_min_step12": {
+          "MAE": 7.026598283221157,
+          "RMSE": 11.372491979280618,
+          "MAPE": 17.773861241901013
+        },
+        "average_steps_1_to_12": {
+          "MAE": 6.487510648839747,
+          "RMSE": 10.411317050239308,
+          "MAPE": 16.41482817397432
+        }
+      }
+    },
+    "STGCN": {
+      "parameters": 8376,
+      "train_s": 159.67307662963867,
+      "latency_ms": 89.15916448633108,
+      "horizons": {
+        "15_min_step3": {
+          "MAE": 4.580209526871376,
+          "RMSE": 9.009079282146073,
+          "MAPE": 11.859172085460106
+        },
+        "30_min_step6": {
+          "MAE": 5.490642821715387,
+          "RMSE": 10.485883537451377,
+          "MAPE": 14.4359448928789
+        },
+        "60_min_step12": {
+          "MAE": 6.957789300065422,
+          "RMSE": 12.39394059923686,
+          "MAPE": 18.74698802304554
+        },
+        "average_steps_1_to_12": {
+          "MAE": 5.526313747730289,
+          "RMSE": 10.459290703054938,
+          "MAPE": 14.610347650296067
+        }
+      }
+    },
+    "JEPAGraph": {
+      "parameters": 12268,
+      "train_s": 238.55678296089172,
+      "latency_ms": 89.52013551633996,
+      "horizons": {
+        "15_min_step3": {
+          "MAE": 4.286265719954906,
+          "RMSE": 8.510161808114942,
+          "MAPE": 11.365155099497306
+        },
+        "30_min_step6": {
+          "MAE": 5.159334128718584,
+          "RMSE": 10.220194768816423,
+          "MAPE": 13.98353445887904
+        },
+        "60_min_step12": {
+          "MAE": 6.7463100574963795,
+          "RMSE": 12.237666329610155,
+          "MAPE": 18.717195329530814
+        },
+        "average_steps_1_to_12": {
+          "MAE": 5.234386158396269,
+          "RMSE": 10.197525984979078,
+          "MAPE": 14.32801692585657
+        }
+      }
+    },
+    "JEPAGraph_DirectRegression": {
+      "parameters": 12268,
+      "train_s": 229.56335759162903,
+      "latency_ms": 89.575210280736,
+      "horizons": {
+        "15_min_step3": {
+          "MAE": 4.575043140517511,
+          "RMSE": 8.628253471771528,
+          "MAPE": 11.408787210620492
+        },
+        "30_min_step6": {
+          "MAE": 5.527824446552513,
+          "RMSE": 10.277296299961641,
+          "MAPE": 13.915999506120675
+        },
+        "60_min_step12": {
+          "MAE": 7.215158448255141,
+          "RMSE": 12.32252386356706,
+          "MAPE": 18.491432945204807
+        },
+        "average_steps_1_to_12": {
+          "MAE": 5.670987334967796,
+          "RMSE": 10.338818748955164,
+          "MAPE": 14.262506978955576
+        }
+      }
+    }
+  },
+  "comparison_metrics": {
+    "15_min_step3": {
+      "jepa_improvement_over_stgcn_pct": 6.417693452492678,
+      "jepa_improvement_over_direct_regression_pct": 6.31201524648225
+    },
+    "30_min_step6": {
+      "jepa_improvement_over_stgcn_pct": 6.034060195765849,
+      "jepa_improvement_over_direct_regression_pct": 6.666100224361183
+    },
+    "60_min_step12": {
+      "jepa_improvement_over_stgcn_pct": 3.03946028614368,
+      "jepa_improvement_over_direct_regression_pct": 6.498102489656959
+    },
+    "average_steps_1_to_12": {
+      "jepa_improvement_over_stgcn_pct": 5.282501187232042,
+      "jepa_improvement_over_direct_regression_pct": 7.698856491521438
+    }
+  }
+}

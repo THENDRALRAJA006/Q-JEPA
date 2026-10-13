@@ -1,0 +1,245 @@
+{
+  "dataset": "METR-LA (Los Angeles Highway Traffic Sensors)",
+  "source": "Zenodo (10.5281/zenodo.5724362, CC BY 4.0)",
+  "num_sensors": 207,
+  "timesteps_evaluated": 2000,
+  "sampling_rate": "5 minutes",
+  "horizons": {
+    "15_min": "3 steps",
+    "30_min": "6 steps",
+    "60_min": "12 steps"
+  },
+  "train_mean_mph": 59.40607452392578,
+  "train_std_mph": 12.377037048339844,
+  "split_ratios": {
+    "train": 0.7,
+    "val": 0.1,
+    "test": 0.2
+  },
+  "models": {
+    "Persistence": {
+      "model_type": "Heuristic Baseline",
+      "parameters": 0,
+      "train_time_s": 0.0,
+      "latency_ms_per_batch": 0.19470000272401825,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 6.423952579498291,
+          "RMSE": 14.730344772338867,
+          "MAPE": 13.980528831481934
+        },
+        "30_min_step6": {
+          "MAE": 7.259169578552246,
+          "RMSE": 15.80114459991455,
+          "MAPE": 16.539295196533203
+        },
+        "60_min_step12": {
+          "MAE": 8.76993179321289,
+          "RMSE": 17.65928077697754,
+          "MAPE": 21.002161026000977
+        },
+        "overall_12steps": {
+          "MAE": 7.146833896636963,
+          "RMSE": 15.57884407043457,
+          "MAPE": 16.34908676147461
+        }
+      }
+    },
+    "Historical_Average": {
+      "model_type": "Seasonal Heuristic Baseline",
+      "parameters": 59616,
+      "train_time_s": 0.0412297248840332,
+      "latency_ms_per_batch": 2.6526461543443682,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 6.7169036865234375,
+          "RMSE": 10.78015422821045,
+          "MAPE": 20.69476890563965
+        },
+        "30_min_step6": {
+          "MAE": 6.618485450744629,
+          "RMSE": 10.674140930175781,
+          "MAPE": 20.509521484375
+        },
+        "60_min_step12": {
+          "MAE": 6.443241596221924,
+          "RMSE": 10.503990173339844,
+          "MAPE": 20.237850189208984
+        },
+        "overall_12steps": {
+          "MAE": 6.6048102378845215,
+          "RMSE": 10.664098739624023,
+          "MAPE": 20.49854850769043
+        }
+      }
+    },
+    "SpatialTemporal_LSTM": {
+      "model_type": "Temporal Recurrent Neural Network",
+      "parameters": 254580,
+      "train_time_s": 1.3018007278442383,
+      "latency_ms_per_batch": 1.7899307668603097,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 7.9875946044921875,
+          "RMSE": 11.566977500915527,
+          "MAPE": 21.077171325683594
+        },
+        "30_min_step6": {
+          "MAE": 8.143658638000488,
+          "RMSE": 11.836341857910156,
+          "MAPE": 21.655336380004883
+        },
+        "60_min_step12": {
+          "MAE": 8.393349647521973,
+          "RMSE": 12.272468566894531,
+          "MAPE": 22.84033966064453
+        },
+        "overall_12steps": {
+          "MAE": 8.147977828979492,
+          "RMSE": 11.86281681060791,
+          "MAPE": 21.766502380371094
+        }
+      }
+    },
+    "STGCN_Graph": {
+      "model_type": "Spatial-Temporal Graph Convolutional Network",
+      "parameters": 8376,
+      "train_time_s": 29.33483076095581,
+      "latency_ms_per_batch": 34.19266923223264,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 5.911016941070557,
+          "RMSE": 9.19631290435791,
+          "MAPE": 15.760709762573242
+        },
+        "30_min_step6": {
+          "MAE": 6.641058921813965,
+          "RMSE": 10.18486499786377,
+          "MAPE": 18.302165985107422
+        },
+        "60_min_step12": {
+          "MAE": 7.5901618003845215,
+          "RMSE": 11.515290260314941,
+          "MAPE": 22.289236068725586
+        },
+        "overall_12steps": {
+          "MAE": 6.672190189361572,
+          "RMSE": 10.229631423950195,
+          "MAPE": 18.461200714111328
+        }
+      }
+    },
+    "JEPAGraph_Full": {
+      "model_type": "Joint Embedding Predictive Architecture + GCN",
+      "parameters": 12268,
+      "train_time_s": 47.80861234664917,
+      "latency_ms_per_batch": 36.67522307324152,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 5.850885391235352,
+          "RMSE": 9.198346138000488,
+          "MAPE": 16.47556495666504
+        },
+        "30_min_step6": {
+          "MAE": 6.7495245933532715,
+          "RMSE": 10.315267562866211,
+          "MAPE": 19.306543350219727
+        },
+        "60_min_step12": {
+          "MAE": 7.875164985656738,
+          "RMSE": 11.716484069824219,
+          "MAPE": 23.26068687438965
+        },
+        "overall_12steps": {
+          "MAE": 6.695605754852295,
+          "RMSE": 10.318419456481934,
+          "MAPE": 19.317302703857422
+        }
+      }
+    },
+    "Ablation_DirectRegression": {
+      "model_type": "Ablation: JEPAGraph without Representation Loss",
+      "parameters": 12268,
+      "train_time_s": 48.00205683708191,
+      "latency_ms_per_batch": 37.045307690277696,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 6.235595226287842,
+          "RMSE": 10.093368530273438,
+          "MAPE": 14.692018508911133
+        },
+        "30_min_step6": {
+          "MAE": 6.911634922027588,
+          "RMSE": 10.889945030212402,
+          "MAPE": 17.24607276916504
+        },
+        "60_min_step12": {
+          "MAE": 8.036639213562012,
+          "RMSE": 11.912362098693848,
+          "MAPE": 22.2182559967041
+        },
+        "overall_12steps": {
+          "MAE": 6.974259376525879,
+          "RMSE": 10.833273887634277,
+          "MAPE": 17.865934371948242
+        }
+      }
+    },
+    "Ablation_NoGraph": {
+      "model_type": "Ablation: JEPAGraph without Spatial Graph Propagation",
+      "parameters": 12268,
+      "train_time_s": 47.837153911590576,
+      "latency_ms_per_batch": 38.812376937130466,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 5.769097328186035,
+          "RMSE": 9.112150192260742,
+          "MAPE": 16.330041885375977
+        },
+        "30_min_step6": {
+          "MAE": 6.3371262550354,
+          "RMSE": 10.059059143066406,
+          "MAPE": 19.311431884765625
+        },
+        "60_min_step12": {
+          "MAE": 7.461258888244629,
+          "RMSE": 11.590726852416992,
+          "MAPE": 22.958999633789062
+        },
+        "overall_12steps": {
+          "MAE": 6.34482479095459,
+          "RMSE": 10.109099388122559,
+          "MAPE": 18.938880920410156
+        }
+      }
+    },
+    "Ablation_NoEMA": {
+      "model_type": "Ablation: JEPAGraph without EMA Target Updates",
+      "parameters": 12268,
+      "train_time_s": 49.28615617752075,
+      "latency_ms_per_batch": 37.368276924378456,
+      "metrics": {
+        "15_min_step3": {
+          "MAE": 5.70811128616333,
+          "RMSE": 9.307950019836426,
+          "MAPE": 14.95626163482666
+        },
+        "30_min_step6": {
+          "MAE": 6.408195972442627,
+          "RMSE": 10.35747241973877,
+          "MAPE": 17.272235870361328
+        },
+        "60_min_step12": {
+          "MAE": 7.683600425720215,
+          "RMSE": 11.83120346069336,
+          "MAPE": 22.18077850341797
+        },
+        "overall_12steps": {
+          "MAE": 6.519196033477783,
+          "RMSE": 10.40998363494873,
+          "MAPE": 17.790119171142578
+        }
+      }
+    }
+  }
+}

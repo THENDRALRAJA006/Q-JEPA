@@ -1,0 +1,176 @@
+{
+  "dataset": "metr_la",
+  "primary_variable": "speed",
+  "variable_units": "mph",
+  "comparison_table": {
+    "Persistence": {
+      "model_name": "Persistence",
+      "parameters": 0,
+      "inference_latency_ms": 0.11,
+      "mae_15m": 3.64,
+      "rmse_15m": 8.57,
+      "mape_15m": 8.1,
+      "mae_30m": 4.52,
+      "rmse_30m": 10.73,
+      "mape_30m": 10.2,
+      "mae_60m": 6.07,
+      "rmse_60m": 13.89,
+      "mape_60m": 13.7,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "Historical_Average": {
+      "model_name": "Historical_Average",
+      "parameters": 59616,
+      "inference_latency_ms": 3.73,
+      "mae_15m": 5.95,
+      "rmse_15m": 10.41,
+      "mape_15m": 16.65,
+      "mae_30m": 5.96,
+      "rmse_30m": 10.42,
+      "mape_30m": 16.57,
+      "mae_60m": 5.98,
+      "rmse_60m": 10.45,
+      "mape_60m": 16.4,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "SpatialTemporal_LSTM": {
+      "model_name": "SpatialTemporal_LSTM",
+      "parameters": 254580,
+      "inference_latency_ms": 1.24,
+      "mae_15m": 6.37,
+      "rmse_15m": 9.83,
+      "mape_15m": 17.83,
+      "mae_30m": 6.4,
+      "rmse_30m": 9.83,
+      "mape_30m": 17.68,
+      "mae_60m": 6.69,
+      "rmse_60m": 10.01,
+      "mape_60m": 17.93,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "STGCN": {
+      "model_name": "STGCN",
+      "parameters": 8376,
+      "inference_latency_ms": 60.2,
+      "mae_15m": 5.24,
+      "rmse_15m": 8.58,
+      "mape_15m": 14.72,
+      "mae_30m": 5.72,
+      "rmse_30m": 9.08,
+      "mape_30m": 15.69,
+      "mae_60m": 7.02,
+      "rmse_60m": 10.27,
+      "mape_60m": 18.71,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "Graph_WaveNet": {
+      "model_name": "Graph_WaveNet",
+      "parameters": 18316,
+      "inference_latency_ms": 91.6,
+      "mae_15m": 4.43,
+      "rmse_15m": 8.37,
+      "mape_15m": 10.95,
+      "mae_30m": 5.22,
+      "rmse_30m": 9.23,
+      "mape_30m": 13.0,
+      "mae_60m": 6.43,
+      "rmse_60m": 10.07,
+      "mape_60m": 15.99,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "SpatialTemporal_Transformer": {
+      "model_name": "SpatialTemporal_Transformer",
+      "parameters": 10124,
+      "inference_latency_ms": 165.3,
+      "mae_15m": 4.72,
+      "rmse_15m": 8.26,
+      "mape_15m": 11.97,
+      "mae_30m": 5.41,
+      "rmse_30m": 9.14,
+      "mape_30m": 14.25,
+      "mae_60m": 6.72,
+      "rmse_60m": 9.99,
+      "mape_60m": 16.84,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "JEPAGraph": {
+      "model_name": "JEPAGraph",
+      "parameters": 12268,
+      "inference_latency_ms": 59.14,
+      "mae_15m": 5.15,
+      "rmse_15m": 8.56,
+      "mape_15m": 13.36,
+      "mae_30m": 5.86,
+      "rmse_30m": 9.21,
+      "mape_30m": 15.08,
+      "mae_60m": 6.84,
+      "rmse_60m": 10.23,
+      "mape_60m": 16.99,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "JEPAGraph_DirectRegression": {
+      "model_name": "JEPAGraph_DirectRegression",
+      "parameters": 12268,
+      "inference_latency_ms": 60.38,
+      "mae_15m": 4.85,
+      "rmse_15m": 8.47,
+      "mape_15m": 12.51,
+      "mae_30m": 5.73,
+      "rmse_30m": 9.35,
+      "mape_30m": 14.29,
+      "mae_60m": 6.7,
+      "rmse_60m": 10.31,
+      "mape_60m": 16.46,
+      "relative_gain_over_stgcn_15m_pct": 0.0
+    },
+    "jepagraph_fm": {
+      "model_name": "JEPAGraph-FM V2.0 (Pretrained Foundation Model)",
+      "parameters": 34851,
+      "inference_latency_ms": 18.39,
+      "mae_15m": 3.8089,
+      "rmse_15m": 7.0421,
+      "mape_15m": 10.71,
+      "mae_30m": 4.6056,
+      "rmse_30m": 8.5984,
+      "mape_30m": 12.93,
+      "mae_60m": 5.9231,
+      "rmse_60m": 10.7525,
+      "mape_60m": 16.91,
+      "relative_gain_over_stgcn_15m_pct": 27.31,
+      "relative_gain_over_jepa_v1_15m_pct": 26.04
+    }
+  },
+  "jepagraph_fm_details": {
+    "parameter_breakdown": {
+      "total_parameters": 34851,
+      "trainable_parameters": 20003,
+      "online_encoder": 14848,
+      "target_encoder": 14848,
+      "predictor": 3520,
+      "decoders": 1090
+    },
+    "metrics_by_horizon": {
+      "15m": {
+        "mae": 3.8089,
+        "rmse": 7.0421,
+        "mape": 10.71,
+        "valid_samples": 93290
+      },
+      "30m": {
+        "mae": 4.6056,
+        "rmse": 8.5984,
+        "mape": 12.93,
+        "valid_samples": 92274
+      },
+      "60m": {
+        "mae": 5.9231,
+        "rmse": 10.7525,
+        "mape": 16.91,
+        "valid_samples": 92895
+      }
+    },
+    "latency_ms": 18.391645312505034,
+    "gain_over_stgcn_15m_pct": 27.31,
+    "gain_over_jepa_v1_15m_pct": 26.04
+  }
+}

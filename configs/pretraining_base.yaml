@@ -1,0 +1,46 @@
+# Q-JEPA Foundation Model (JEPAGraph-FM) — Base Configuration
+# Standard GPU pretraining configuration across all 6 Caltrans benchmarks
+model:
+  scale: base
+  in_channels: 3
+  hidden_dim: 64
+  num_layers: 4
+  dilations: [1, 2, 4, 8]
+  kernel_size: 2
+  input_window: 12
+  output_window: 12
+  predictor_layers: 2
+  dropout: 0.10
+  ema_decay: 0.995
+  mask_ratio: 0.20
+
+training:
+  batch_size: 32
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  max_epochs: 50
+  early_stopping_patience: 10
+  gradient_clip_norm: 5.0
+  device: cuda
+  use_amp: true
+  subsample_ratio: 1.0
+  max_samples_per_dataset: null
+  checkpoint_dir: models/foundation
+  checkpoint_name: jepagraph_fm_base.pt
+
+objectives:
+  w_jepa: 1.0
+  w_mask: 0.5
+  w_sup: 1.0
+  w_temp: 0.05
+  huber_delta: 1.0
+
+datasets:
+  mixture:
+    - metr_la
+    - pems_bay
+    - pems03
+    - pems04
+    - pems07
+    - pems08
+  sampling_temperature: 0.5

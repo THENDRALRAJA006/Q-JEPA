@@ -1,0 +1,236 @@
+{
+  "metr_la": {
+    "status": "PASSED",
+    "manifest": {
+      "name": "METR-LA Highway Traffic Speed",
+      "primary_variable": "speed",
+      "variable_units": "mph",
+      "license": "CC BY 4.0"
+    },
+    "shape": {
+      "T": 34272,
+      "N": 207
+    },
+    "graph_diagnostics": {
+      "num_nodes": 207,
+      "num_edges": 1515,
+      "density": 0.035528352328690026,
+      "isolated_nodes": 1,
+      "is_symmetric": false,
+      "max_weight": 1.0,
+      "min_nonzero_weight": 0.10008397698402405,
+      "avg_degree": 7.318840579710145
+    },
+    "missingness": {
+      "total_elements": 7094304,
+      "nan_count": 0,
+      "nan_ratio": 0.0,
+      "zero_count": 575302,
+      "zero_ratio": 0.08109350825676487,
+      "negative_count": 0,
+      "missing_ratio": 0.08109350825676487,
+      "valid_count": 6519002,
+      "valid_ratio": 0.9189064917432351
+    },
+    "train_statistics": {
+      "mean": 58.58426284790039,
+      "std": 12.822882652282715
+    },
+    "val_windows": 100
+  },
+  "pems_bay": {
+    "status": "PASSED",
+    "manifest": {
+      "name": "PEMS-BAY Highway Traffic Speed",
+      "primary_variable": "speed",
+      "variable_units": "mph",
+      "license": "CC BY 4.0 / Caltrans Open Data"
+    },
+    "shape": {
+      "T": 52116,
+      "N": 325
+    },
+    "graph_diagnostics": {
+      "num_nodes": 325,
+      "num_edges": 33208,
+      "density": 0.3153656220322887,
+      "isolated_nodes": 0,
+      "is_symmetric": true,
+      "max_weight": 0.9987565875053406,
+      "min_nonzero_weight": 0.020204614847898483,
+      "avg_degree": 102.17846153846153
+    },
+    "missingness": {
+      "total_elements": 16937700,
+      "nan_count": 0,
+      "nan_ratio": 0.0,
+      "zero_count": 507326,
+      "zero_ratio": 0.029952472885929022,
+      "negative_count": 0,
+      "missing_ratio": 0.029952472885929022,
+      "valid_count": 16430374,
+      "valid_ratio": 0.9700475271140709
+    },
+    "train_statistics": {
+      "mean": 57.93535232543945,
+      "std": 6.025723934173584
+    },
+    "val_windows": 100
+  },
+  "pems03": {
+    "status": "PASSED",
+    "manifest": {
+      "name": "PEMS03 Traffic Flow Benchmark",
+      "primary_variable": "flow",
+      "variable_units": "veh/5min",
+      "license": "CC BY 4.0 / Caltrans Open Data"
+    },
+    "shape": {
+      "T": 26208,
+      "N": 358
+    },
+    "graph_diagnostics": {
+      "num_nodes": 358,
+      "num_edges": 40486,
+      "density": 0.3167769901256592,
+      "isolated_nodes": 0,
+      "is_symmetric": true,
+      "max_weight": 0.9989756941795349,
+      "min_nonzero_weight": 0.01945975236594677,
+      "avg_degree": 113.08938547486034
+    },
+    "missingness": {
+      "total_elements": 9382464,
+      "nan_count": 0,
+      "nan_ratio": 0.0,
+      "zero_count": 281668,
+      "zero_ratio": 0.03002068539778037,
+      "negative_count": 0,
+      "missing_ratio": 0.03002068539778037,
+      "valid_count": 9100796,
+      "valid_ratio": 0.9699793146022196
+    },
+    "train_statistics": {
+      "mean": 251.87509155273438,
+      "std": 43.244468688964844
+    },
+    "val_windows": 100
+  },
+  "pems04": {
+    "status": "PASSED",
+    "manifest": {
+      "name": "PEMS04 Traffic Flow & Speed Benchmark",
+      "primary_variable": "flow",
+      "variable_units": "veh/5min",
+      "license": "CC BY 4.0 / Caltrans Open Data"
+    },
+    "shape": {
+      "T": 16992,
+      "N": 307
+    },
+    "graph_diagnostics": {
+      "num_nodes": 307,
+      "num_edges": 29680,
+      "density": 0.315939622320155,
+      "isolated_nodes": 0,
+      "is_symmetric": true,
+      "max_weight": 0.9986060857772827,
+      "min_nonzero_weight": 0.01987573318183422,
+      "avg_degree": 96.67752442996742
+    },
+    "missingness": {
+      "total_elements": 5216544,
+      "nan_count": 0,
+      "nan_ratio": 0.0,
+      "zero_count": 156753,
+      "zero_ratio": 0.030049204990890522,
+      "negative_count": 0,
+      "missing_ratio": 0.030049204990890522,
+      "valid_count": 5059791,
+      "valid_ratio": 0.9699507950091095
+    },
+    "train_statistics": {
+      "mean": 232.466796875,
+      "std": 38.066497802734375
+    },
+    "val_windows": 100
+  },
+  "pems07": {
+    "status": "PASSED",
+    "manifest": {
+      "name": "PEMS07 Large-Scale Traffic Flow Benchmark",
+      "primary_variable": "flow",
+      "variable_units": "veh/5min",
+      "license": "CC BY 4.0 / Caltrans Open Data"
+    },
+    "shape": {
+      "T": 28224,
+      "N": 883
+    },
+    "graph_diagnostics": {
+      "num_nodes": 883,
+      "num_edges": 248094,
+      "density": 0.318556867820741,
+      "isolated_nodes": 0,
+      "is_symmetric": true,
+      "max_weight": 0.9998320937156677,
+      "min_nonzero_weight": 0.018650542944669724,
+      "avg_degree": 280.96715741789353
+    },
+    "missingness": {
+      "total_elements": 24921792,
+      "nan_count": 0,
+      "nan_ratio": 0.0,
+      "zero_count": 748799,
+      "zero_ratio": 0.030045953356805162,
+      "negative_count": 0,
+      "missing_ratio": 0.030045953356805162,
+      "valid_count": 24172993,
+      "valid_ratio": 0.9699540466431948
+    },
+    "train_statistics": {
+      "mean": 276.5361022949219,
+      "std": 49.26603698730469
+    },
+    "val_windows": 100
+  },
+  "pems08": {
+    "status": "PASSED",
+    "manifest": {
+      "name": "PEMS08 Traffic Flow Benchmark",
+      "primary_variable": "flow",
+      "variable_units": "veh/5min",
+      "license": "CC BY 4.0 / Caltrans Open Data"
+    },
+    "shape": {
+      "T": 17856,
+      "N": 170
+    },
+    "graph_diagnostics": {
+      "num_nodes": 170,
+      "num_edges": 8990,
+      "density": 0.31291333101287855,
+      "isolated_nodes": 0,
+      "is_symmetric": true,
+      "max_weight": 0.9954373240470886,
+      "min_nonzero_weight": 0.021365555003285408,
+      "avg_degree": 52.88235294117647
+    },
+    "missingness": {
+      "total_elements": 3035520,
+      "nan_count": 0,
+      "nan_ratio": 0.0,
+      "zero_count": 90677,
+      "zero_ratio": 0.02987198239510858,
+      "negative_count": 0,
+      "missing_ratio": 0.02987198239510858,
+      "valid_count": 2944843,
+      "valid_ratio": 0.9701280176048914
+    },
+    "train_statistics": {
+      "mean": 260.50885009765625,
+      "std": 40.17860794067383
+    },
+    "val_windows": 100
+  }
+}

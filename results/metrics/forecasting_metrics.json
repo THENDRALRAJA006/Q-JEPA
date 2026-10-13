@@ -1,0 +1,29 @@
+{
+  "seed": 42,
+  "window_size": 12,
+  "horizon": 1,
+  "epochs": 30,
+  "normalizer": {
+    "min": 9.846998771506476,
+    "max": 67.12079700017587
+  },
+  "note": "All metrics on normalised speeds. Denormalize for km/h.",
+  "results": {
+    "persistence": {
+      "MAE": 0.036070264875888824,
+      "RMSE": 0.045034121721982956
+    },
+    "historical_average": {
+      "MAE": 0.07170076532277747,
+      "RMSE": 0.08875827059888303
+    },
+    "lstm": {
+      "MAE": 0.028912236914038658,
+      "RMSE": 0.036459580063819885
+    },
+    "jepa": {
+      "MAE": 0.029774382710456848,
+      "RMSE": 0.037634219974279404
+    }
+  }
+}
