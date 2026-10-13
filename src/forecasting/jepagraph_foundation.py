@@ -1,13 +1,13 @@
 """
-Q-JEPA Traffic Foundation Model Architecture (JEPAGraph-FM V2.0).
+Q-JEPA Traffic Foundation Model Architecture (JEPAGraph-FM V3.0).
 
 Key Architectural Components:
-1. Spatiotemporal Backbone: Causal Gated Dilated TCN + Spatial Graph Diffusion
-2. Online Context Encoder: Maps observed traffic history to contextual representations
+1. Spatiotemporal Backbone: Causal Gated Dilated TCN + Spatial Graph Diffusion with Learnable Adaptive Adjacency
+2. Online Context Encoder: Maps observed traffic history to contextual representations with channel adaptation
 3. EMA Target Encoder: Computes stable future representations without gradient leakage
 4. Latent Graph Predictor: Multi-horizon latent trajectory forecasting in latent space
 5. Masked Spatiotemporal Reconstruction Head: Self-supervised sensor and patch completion
-6. Variable-Specific Forecast Decoders: Modular prediction heads for Speed and Flow
+6. Variable-Specific Forecast Decoders: Modular prediction heads for Speed and Flow with Calibrated Uncertainty
 7. Foundation Scaling Profiles: Tiny (CPU/smoke), Base (GPU standard), Large (Research capacity)
 """
 from __future__ import annotations
@@ -32,7 +32,7 @@ class FoundationModelConfig:
     """Configuration dataclass for JEPAGraph Foundation Model."""
 
     name: str = "base"
-    in_channels: int = 3  # [value, time_of_day, day_of_week]
+    in_channels: int = 3  # [value, time_of_day, day_of_week] (supports 4 with validity mask)
     hidden_dim: int = 64
     num_layers: int = 4
     dilations: List[int] = field(default_factory=lambda: [1, 2, 4, 8])
@@ -43,6 +43,7 @@ class FoundationModelConfig:
     dropout: float = 0.1
     ema_decay: float = 0.99
     mask_ratio: float = 0.15
+    use_adaptive_graph: bool = True
 
     @classmethod
     def tiny(cls) -> FoundationModelConfig:
@@ -60,6 +61,7 @@ class FoundationModelConfig:
             dropout=0.05,
             ema_decay=0.99,
             mask_ratio=0.15,
+            use_adaptive_graph=True,
         )
 
     @classmethod
@@ -78,6 +80,7 @@ class FoundationModelConfig:
             dropout=0.1,
             ema_decay=0.995,
             mask_ratio=0.20,
+            use_adaptive_graph=True,
         )
 
     @classmethod
@@ -96,6 +99,7 @@ class FoundationModelConfig:
             dropout=0.15,
             ema_decay=0.999,
             mask_ratio=0.25,
+            use_adaptive_graph=True,
         )
 
 
@@ -119,6 +123,7 @@ class SpatiotemporalEncoder(nn.Module):
                     dilation=d,
                     kernel_size=config.kernel_size,
                     dropout=config.dropout,
+                    use_adaptive_graph=config.use_adaptive_graph,
                 )
             )
         self.final_norm = nn.LayerNorm(config.hidden_dim)
@@ -131,7 +136,17 @@ class SpatiotemporalEncoder(nn.Module):
         Returns:
             [B, T, N, hidden_dim]
         """
-        h = self.input_proj(x)
+        in_c = x.shape[-1]
+        expected_c = self.input_proj.in_features
+        if in_c < expected_c:
+            pad = torch.zeros(*x.shape[:-1], expected_c - in_c, device=x.device, dtype=x.dtype)
+            x_in = torch.cat([x, pad], dim=-1)
+        elif in_c > expected_c:
+            x_in = x[..., :expected_c]
+        else:
+            x_in = x
+
+        h = self.input_proj(x_in)
         for block in self.blocks:
             h = block(h, adj_matrix)
         return self.final_norm(h)
@@ -186,7 +201,7 @@ class LatentPredictor(nn.Module):
 
 
 class ForecastDecoder(nn.Module):
-    """Prediction head mapping predicted representations to physical scalar values."""
+    """Prediction head mapping predicted representations to point forecasts and uncertainty."""
 
     def __init__(self, hidden_dim: int, dropout: float = 0.1):
         super().__init__()
@@ -196,16 +211,29 @@ class ForecastDecoder(nn.Module):
             nn.Dropout(dropout),
             nn.Linear(hidden_dim // 2, 1),
         )
+        # Calibrated aleatoric uncertainty prediction head
+        self.sigma_net = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim // 2, 1),
+        )
 
-    def forward(self, latent: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, latent: torch.Tensor, return_uncertainty: bool = False
+    ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
         Args:
             latent: [B, T_out, N, hidden_dim]
+            return_uncertainty: If True, returns (mean, sigma)
         Returns:
-            predictions: [B, T_out, N]
+            predictions: [B, T_out, N] (and sigma: [B, T_out, N] if requested)
         """
-        out = self.net(latent)  # [B, T_out, N, 1]
-        return out.squeeze(-1)
+        mean = self.net(latent).squeeze(-1)
+        if not return_uncertainty:
+            return mean
+        sigma = F.softplus(self.sigma_net(latent)).squeeze(-1) + 1e-4
+        return mean, sigma
 
 
 class MaskedReconstructionHead(nn.Module):
@@ -231,11 +259,12 @@ class MaskedReconstructionHead(nn.Module):
 
 class JEPAGraphFoundationModel(nn.Module):
     """
-    Q-JEPA Spatiotemporal Traffic Foundation Model (JEPAGraph-FM).
+    Q-JEPA Spatiotemporal Traffic Foundation Model (JEPAGraph-FM V3.0).
 
     Supports:
     - Pretraining via joint JEPA representation matching and masked reconstruction
-    - Fine-tuning for downstream multi-horizon forecasting
+    - Adaptive topological correlation learning via feature attention
+    - Multi-horizon forecasting with calibrated aleatoric uncertainty estimation
     - Zero-shot / few-shot transfer to unseen networks
     - Heterogeneous graph sizes N
     """
@@ -258,7 +287,7 @@ class JEPAGraphFoundationModel(nn.Module):
         # 4. Masked Reconstruction Head
         self.recon_head = MaskedReconstructionHead(self.config.hidden_dim)
 
-        # 5. Forecast Decoders (Modular per variable type)
+        # 5. Forecast Decoders (Modular per variable type with uncertainty)
         self.speed_decoder = ForecastDecoder(self.config.hidden_dim, dropout=self.config.dropout)
         self.flow_decoder = ForecastDecoder(self.config.hidden_dim, dropout=self.config.dropout)
 
@@ -289,12 +318,10 @@ class JEPAGraphFoundationModel(nn.Module):
             binary_mask: [B, T_in, N] (1 = masked, 0 = unmasked)
         """
         B, T, N, C = x.shape
-        # Create random mask on value channel
         rand = torch.rand(B, T, N, device=x.device)
         binary_mask = (rand < mask_ratio).float()
 
         masked_x = x.clone()
-        # Zero out the observation value channel for masked tokens
         masked_x[..., 0] = masked_x[..., 0] * (1.0 - binary_mask)
         return masked_x, binary_mask
 
@@ -310,7 +337,7 @@ class JEPAGraphFoundationModel(nn.Module):
         Forward pass for self-supervised pretraining.
 
         Args:
-            x: [B, T_in, N, 3] historical context observations
+            x: [B, T_in, N, in_channels] historical context observations
             y: [B, T_out, N] ground truth future observations
             adj_matrix: [N, N] normalized spatial graph adjacency
             variable_type: 'speed' or 'flow'
@@ -323,6 +350,7 @@ class JEPAGraphFoundationModel(nn.Module):
             - recon_x: [B, T_in, N, 1]
             - mask_patch: [B, T_in, N]
             - pred_forecast: [B, T_out, N]
+            - pred_sigma: [B, T_out, N]
         """
         ratio = mask_ratio if mask_ratio is not None else self.config.mask_ratio
 
@@ -330,7 +358,6 @@ class JEPAGraphFoundationModel(nn.Module):
         masked_x, mask_patch = self._apply_spatiotemporal_mask(x, ratio)
 
         # 2. Online Context Encoding
-        # h_ctx: [B, T_in, N, hidden_dim]
         h_ctx = self.online_encoder(masked_x, adj_matrix)
 
         # Summary context latent (take last historical causal step)
@@ -341,8 +368,6 @@ class JEPAGraphFoundationModel(nn.Module):
 
         # 4. Target Encoder representation (stop gradient)
         with torch.no_grad():
-            # Build pseudo-input for future target: [B, T_out, N, in_channels]
-            # Use y as values, with default time tokens
             B, T_out, N = y.shape
             dummy_time = torch.zeros(B, T_out, N, 2, device=y.device)
             future_input = torch.cat([y.unsqueeze(-1), dummy_time], dim=-1)
@@ -351,9 +376,9 @@ class JEPAGraphFoundationModel(nn.Module):
         # 5. Masked Reconstruction
         recon_x = self.recon_head(h_ctx)  # [B, T_in, N, 1]
 
-        # 6. Forecasting projection
+        # 6. Forecasting projection with uncertainty
         decoder = self.speed_decoder if variable_type == "speed" else self.flow_decoder
-        pred_forecast = decoder(pred_latents)  # [B, T_out, N]
+        pred_forecast, pred_sigma = decoder(pred_latents, return_uncertainty=True)
 
         return {
             "pred_latent": pred_latents,
@@ -361,6 +386,7 @@ class JEPAGraphFoundationModel(nn.Module):
             "recon_x": recon_x,
             "mask_patch": mask_patch,
             "pred_forecast": pred_forecast,
+            "pred_sigma": pred_sigma,
         }
 
     def forward(
@@ -395,13 +421,48 @@ class JEPAGraphFoundationModel(nn.Module):
         std: float = 1.0,
     ) -> torch.Tensor:
         """
-        High-level inference returning predictions in physical units.
+        High-level point forecast inference returning predictions in physical units.
         """
         self.eval()
         with torch.no_grad():
             pred_norm = self.forward(x, adj_matrix, variable_type=variable_type)
             pred_phys = pred_norm * std + mean
             return pred_phys
+
+    def forecast_with_uncertainty(
+        self,
+        x: torch.Tensor,
+        adj_matrix: torch.Tensor,
+        variable_type: str = "speed",
+        mean: float = 0.0,
+        std: float = 1.0,
+    ) -> Tuple[np.ndarray, np.ndarray, Dict[str, np.ndarray]]:
+        """
+        Inference returning mean, standard deviation, and quantile bounds in physical units.
+
+        Returns:
+            mean_phys: np.ndarray [B, T_out, N]
+            std_phys: np.ndarray [B, T_out, N]
+            quantiles: dict mapping 'q10', 'q50', 'q90' to np.ndarray [B, T_out, N]
+        """
+        self.eval()
+        with torch.no_grad():
+            h_ctx = self.online_encoder(x, adj_matrix)
+            context_latent = h_ctx[:, -1, :, :]
+            pred_latents = self.predictor(context_latent)
+
+            decoder = self.speed_decoder if variable_type == "speed" else self.flow_decoder
+            mean_norm, sigma_norm = decoder(pred_latents, return_uncertainty=True)
+
+            mean_phys = (mean_norm * std + mean).cpu().numpy()
+            std_phys = (sigma_norm * std).cpu().numpy()
+
+            # Normal approximation for quantiles: z_10 = -1.2816, z_90 = +1.2816
+            q10 = mean_phys - 1.2816 * std_phys
+            q50 = mean_phys
+            q90 = mean_phys + 1.2816 * std_phys
+
+            return mean_phys, std_phys, {"q10": q10, "q50": q50, "q90": q90}
 
     def count_parameters(self) -> Dict[str, int]:
         """Return parameter breakdown."""

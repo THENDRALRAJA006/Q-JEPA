@@ -114,6 +114,17 @@ class BaseTrafficAdapter(ABC):
         self.timestamps: Optional[pd.DatetimeIndex] = None
 
         self._is_loaded = False
+        self._is_real = False
+
+    @property
+    def is_real_data(self) -> bool:
+        """True if backed by real physical observations on disk, False if synthetic/fallback."""
+        return self._is_real
+
+    @property
+    def provenance_status(self) -> str:
+        """Detailed provenance description string."""
+        return "REAL_PHYSICAL_OBSERVATION" if self._is_real else "PROCEDURAL_CALTRANS_PROFILE_FALLBACK"
 
     @abstractmethod
     def load_data(self) -> Tuple[np.ndarray, np.ndarray, List[str]]:
@@ -200,11 +211,15 @@ class BaseTrafficAdapter(ABC):
                 f"window size {window_size}."
             )
 
-        num_target = total_possible
-        if subsample_ratio < 1.0:
+        if max_samples is not None and subsample_ratio < 1.0:
+            # Genuine scaling under budget cap:
+            num_target = min(total_possible, max(8, int(max_samples * subsample_ratio)))
+        elif subsample_ratio < 1.0:
             num_target = max(8, int(total_possible * subsample_ratio))
-        if max_samples is not None:
-            num_target = min(num_target, max_samples)
+        elif max_samples is not None:
+            num_target = min(total_possible, max_samples)
+        else:
+            num_target = total_possible
 
         indices = np.linspace(0, total_possible - 1, num_target, dtype=int)
 
@@ -284,11 +299,13 @@ class METRLAAdapter(BaseTrafficAdapter):
 
             df = pd.read_csv(csv_path, index_col=0)
             data = df.values.astype(np.float32)
+            self._is_real = True
             return data, adj_mx, list(sensor_ids)
 
         logger.warning(
             f"METR-LA files not found at {self.data_dir}. Generating verified synthetic benchmark profile."
         )
+        self._is_real = False
         return _generate_caltrans_benchmark_profile(
             num_nodes=self.manifest.num_nodes,
             num_timesteps=self.manifest.num_timesteps_expected,

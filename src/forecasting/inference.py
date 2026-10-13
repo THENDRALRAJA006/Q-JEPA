@@ -421,20 +421,20 @@ class JEPAGraphFMInferenceEngine:
         adj = torch.tensor([[1.0]], dtype=torch.float32)
 
         with torch.no_grad():
-            pred_norm = self.model.forward(x_tensor, adj, variable_type="speed")  # [1, 12, 1]
-            pred_phys = pred_norm[0, :, 0].cpu().numpy() * self.std + self.mean
+            mean_arr, std_arr, _ = self.model.forecast_with_uncertainty(
+                x_tensor, adj, variable_type="speed", mean=self.mean, std=self.std
+            )
+            pred_phys = mean_arr[0, :, 0]
+            pred_std = std_arr[0, :, 0]
 
         mean_kmh = np.clip(pred_phys, 5.0, 120.0)
-        # Multi-horizon uncertainty scaling: sigma_0 * sqrt(h)
-        base_sigma = np.abs(mean_kmh[0]) * 0.08
-        horizons_idx = np.arange(1, len(mean_kmh) + 1)
-        std_kmh = base_sigma * np.sqrt(horizons_idx)
+        std_kmh = np.clip(pred_std, 0.5, 30.0)
 
         return mean_kmh, std_kmh
 
     @property
     def name(self) -> str:
-        return "JEPAGraph-FM (V2.0 Foundation Model)"
+        return "JEPAGraph-FM (V3.0 Master Model)"
 
 
 def load_jepafm_engine(checkpoint_path: Optional[Path] = None) -> Optional[JEPAGraphFMInferenceEngine]:

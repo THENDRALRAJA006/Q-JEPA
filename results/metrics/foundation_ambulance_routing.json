@@ -1,13 +1,13 @@
 {
   "num_trips_simulated": 50,
-  "evaluation_duration_seconds": 0.07,
-  "engine_used": "JEPAGraph-FM (V2.0 Foundation Model)",
+  "evaluation_duration_seconds": 0.06,
+  "engine_used": "JEPAGraph-FM (V3.0 Master Model)",
   "strategies": {
     "1_shortest_distance": {
       "mean_journey_time_s": 1214.74,
       "p90_journey_time_s": 2019.68,
       "mean_eta_error_s": 26.8,
-      "mean_computation_latency_ms": 0.39,
+      "mean_computation_latency_ms": 0.32,
       "infeasible_rate_pct": 0.0,
       "time_saved_vs_current_traffic_s": -84.44,
       "relative_improvement_pct": -7.47
@@ -16,7 +16,7 @@
       "mean_journey_time_s": 1130.3,
       "p90_journey_time_s": 1789.57,
       "mean_eta_error_s": 16.84,
-      "mean_computation_latency_ms": 0.33,
+      "mean_computation_latency_ms": 0.29,
       "infeasible_rate_pct": 0.0,
       "time_saved_vs_current_traffic_s": 0.0,
       "relative_improvement_pct": 0.0
@@ -25,7 +25,7 @@
       "mean_journey_time_s": 1133.8,
       "p90_journey_time_s": 1790.99,
       "mean_eta_error_s": 20.68,
-      "mean_computation_latency_ms": 0.33,
+      "mean_computation_latency_ms": 0.29,
       "infeasible_rate_pct": 0.0,
       "time_saved_vs_current_traffic_s": -3.51,
       "relative_improvement_pct": -0.31
@@ -34,19 +34,19 @@
       "mean_journey_time_s": 1324.14,
       "p90_journey_time_s": 2151.56,
       "mean_eta_error_s": 29.26,
-      "mean_computation_latency_ms": 0.15,
+      "mean_computation_latency_ms": 0.12,
       "infeasible_rate_pct": 0.0,
       "time_saved_vs_current_traffic_s": -193.85,
       "relative_improvement_pct": -17.15
     },
     "5_time_dependent_uncertainty": {
-      "mean_journey_time_s": 1316.45,
-      "p90_journey_time_s": 2126.5,
-      "mean_eta_error_s": 30.85,
-      "mean_computation_latency_ms": 0.12,
+      "mean_journey_time_s": 1316.65,
+      "p90_journey_time_s": 2127.48,
+      "mean_eta_error_s": 30.86,
+      "mean_computation_latency_ms": 0.11,
       "infeasible_rate_pct": 0.0,
-      "time_saved_vs_current_traffic_s": -186.16,
-      "relative_improvement_pct": -16.47
+      "time_saved_vs_current_traffic_s": -186.36,
+      "relative_improvement_pct": -16.49
     }
   }
 }

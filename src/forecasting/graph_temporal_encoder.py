@@ -1,11 +1,11 @@
 """
-Spatiotemporal Graph and Dilated Causal Temporal Convolutions for JEPAGraph-FM.
+Spatiotemporal Graph and Dilated Causal Temporal Convolutions for JEPAGraph-FM V3.0.
 
 Components:
 - GatedDilatedTemporalConv: Causal 1D convolution with exponential dilation receptive fields
+- AdaptiveGraphLearning: Dynamic spatial correlations learned from features without memorizing node IDs
 - GraphDiffusionConvolution: Spatial graph message passing supporting variable node counts N
-- RelativeSpatialEmbedding: Positional spatial encodings independent of static node IDs
-- SpatiotemporalBlock: Modular residual ST block fusing temporal and spatial dynamics
+- SpatiotemporalBlock: Modular residual ST block fusing temporal and spatial dynamics with adaptive graph learning
 """
 from __future__ import annotations
 
@@ -69,6 +69,42 @@ class GatedDilatedTemporalConv(nn.Module):
         return filter_act * gate_act
 
 
+class AdaptiveGraphLearning(nn.Module):
+    """
+    Learns dynamic spatial inter-sensor correlations for arbitrary N nodes.
+    Computes A_adp = Softmax(ReLU(Q(h) K(h)^T) / sqrt(d)).
+    Does NOT memorize fixed sensor IDs; works seamlessly across heterogeneous N.
+    """
+
+    def __init__(self, hidden_dim: int, adaptive_dim: int = 16):
+        super().__init__()
+        self.q_proj = nn.Linear(hidden_dim, adaptive_dim, bias=False)
+        self.k_proj = nn.Linear(hidden_dim, adaptive_dim, bias=False)
+        self.scale = 1.0 / math.sqrt(adaptive_dim)
+
+    def forward(self, h: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+            h: [B*T, N, hidden_dim] or [N, hidden_dim]
+        Returns:
+            A_adp: [N, N] normalized adaptive adjacency
+        """
+        if h.dim() == 2:
+            q = self.q_proj(h)
+            k = self.k_proj(h)
+            sim = torch.mm(q, k.t()) * self.scale
+            return F.softmax(F.relu(sim), dim=-1)
+        elif h.dim() == 3:
+            # Aggregate over batch*time to maintain a single [N, N] topology per batch
+            h_mean = torch.mean(h, dim=0)  # [N, hidden_dim]
+            q = self.q_proj(h_mean)
+            k = self.k_proj(h_mean)
+            sim = torch.mm(q, k.t()) * self.scale
+            return F.softmax(F.relu(sim), dim=-1)
+        else:
+            raise ValueError(f"Unexpected shape {h.shape} for AdaptiveGraphLearning")
+
+
 class GraphDiffusionConvolution(nn.Module):
     """
     Spatial graph diffusion convolution operating on arbitrary sensor graphs [N, N].
@@ -126,7 +162,7 @@ class SpatiotemporalBlock(nn.Module):
     """
     Unified Spatiotemporal Block combining:
     1. Gated causal dilated temporal convolution
-    2. Spatial graph diffusion message passing
+    2. Optional adaptive graph learning combined with physical graph diffusion
     3. Residual skip connection and LayerNorm
     """
 
@@ -136,9 +172,11 @@ class SpatiotemporalBlock(nn.Module):
         dilation: int = 1,
         kernel_size: int = 2,
         dropout: float = 0.1,
+        use_adaptive_graph: bool = True,
     ):
         super().__init__()
         self.hidden_dim = hidden_dim
+        self.use_adaptive_graph = use_adaptive_graph
         self.temporal_conv = GatedDilatedTemporalConv(
             in_channels=hidden_dim,
             out_channels=hidden_dim,
@@ -150,6 +188,13 @@ class SpatiotemporalBlock(nn.Module):
             out_channels=hidden_dim,
             max_diffusion_step=2,
         )
+        if use_adaptive_graph:
+            self.adaptive_graph = AdaptiveGraphLearning(hidden_dim=hidden_dim)
+            self.alpha = nn.Parameter(torch.tensor(0.5))
+        else:
+            self.adaptive_graph = None
+            self.alpha = None
+
         self.norm = nn.LayerNorm(hidden_dim)
         self.dropout = nn.Dropout(dropout)
 
@@ -169,9 +214,19 @@ class SpatiotemporalBlock(nn.Module):
         t_out = self.temporal_conv(x_t)  # [B*N, C, T]
         t_out = t_out.reshape(B, N, C, T).permute(0, 3, 1, 2)  # [B, T, N, C]
 
-        # 2. Spatial Graph Diffusion
-        s_out = self.spatial_conv(t_out, adj_matrix)  # [B, T, N, C]
+        # 2. Determine effective graph adjacency
+        if self.use_adaptive_graph and self.adaptive_graph is not None:
+            # Extract features for adaptive topology: [B*T, N, C]
+            h_flat = t_out.reshape(B * T, N, C)
+            a_adp = self.adaptive_graph(h_flat)
+            a_weight = torch.sigmoid(self.alpha)
+            effective_adj = a_weight * adj_matrix + (1.0 - a_weight) * a_adp
+        else:
+            effective_adj = adj_matrix
 
-        # 3. Residual and Norm
+        # 3. Spatial Graph Diffusion
+        s_out = self.spatial_conv(t_out, effective_adj)  # [B, T, N, C]
+
+        # 4. Residual and Norm
         out = self.norm(residual + self.dropout(s_out))
         return out

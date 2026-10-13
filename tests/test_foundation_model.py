@@ -305,3 +305,62 @@ class TestAmbulanceRoutingIntegration:
         assert "4_time_dependent_predicted" in comp
         assert comp["1_shortest_distance"].feasible
         assert comp["4_time_dependent_predicted"].feasible
+
+
+class TestFoundationModelV3Upgrades:
+    """Verifies V3.0 additions: adaptive graph learning, calibrated uncertainty, and LODO."""
+
+    def test_adaptive_graph_learning(self):
+        from src.forecasting.graph_temporal_encoder import AdaptiveGraphLearning
+        agl = AdaptiveGraphLearning(hidden_dim=32, adaptive_dim=8)
+        h = torch.randn(4, 15, 32)
+        adj_adp = agl(h)
+        assert adj_adp.shape == (15, 15)
+        # Symmetrically non-negative and row-normalized (softmax)
+        assert torch.all(adj_adp >= 0.0)
+        row_sums = torch.sum(adj_adp, dim=-1)
+        assert torch.allclose(row_sums, torch.ones_like(row_sums), atol=1e-4)
+
+    def test_forecast_with_uncertainty_interface(self):
+        config = FoundationModelConfig.tiny()
+        model = JEPAGraphFoundationModel(config)
+        x = torch.randn(2, 12, 10, 3)
+        adj = torch.eye(10)
+
+        mean_phys, std_phys, quantiles = model.forecast_with_uncertainty(
+            x, adj, variable_type="speed", mean=50.0, std=10.0
+        )
+        assert mean_phys.shape == (2, 12, 10)
+        assert std_phys.shape == (2, 12, 10)
+        assert np.all(std_phys > 0.0)
+        assert "q10" in quantiles and "q50" in quantiles and "q90" in quantiles
+        # Quantile ordering: q10 <= q50 <= q90
+        assert np.all(quantiles["q10"] <= quantiles["q50"])
+        assert np.all(quantiles["q50"] <= quantiles["q90"])
+
+    def test_adapter_provenance_labels(self):
+        adapter_la = get_adapter("metr_la")
+        adapter_la.prepare()
+        assert adapter_la.is_real_data is True
+        assert adapter_la.provenance_status == "REAL_PHYSICAL_OBSERVATION"
+
+        adapter_bay = get_adapter("pems_bay")
+        adapter_bay.prepare()
+        assert adapter_bay.is_real_data is False
+        assert adapter_bay.provenance_status == "PROCEDURAL_CALTRANS_PROFILE_FALLBACK"
+
+    def test_distinct_data_budget_scaling(self):
+        adapter = get_adapter("metr_la")
+        budgets = [0.01, 0.05, 0.10, 0.25, 0.50, 1.00]
+        sample_counts = []
+        for b in budgets:
+            ds = SingleDatasetWindowDataset(
+                adapter=adapter, split="train", subsample_ratio=b, max_samples=512
+            )
+            sample_counts.append(len(ds))
+
+        # Each budget step must be strictly greater than the previous step
+        for i in range(1, len(sample_counts)):
+            assert sample_counts[i] > sample_counts[i - 1], (
+                f"Budget {budgets[i]} did not increase samples over {budgets[i-1]}: {sample_counts}"
+            )

@@ -1,16 +1,17 @@
 """
-Cross-Dataset Transfer and Data-Efficiency Benchmark for Q-JEPA Foundation Model.
+Cross-Dataset Transfer and Data-Efficiency Benchmark for Q-JEPA Foundation Model V3.0.
 
 Implements:
 1. Protocol C: Leave-One-Dataset-Out (LODO) Cross-Network Transfer
-   - Source pretraining excluding target dataset
+   - Source pretraining strictly excluding target dataset
+   - Verification of dataset isolation before zero-shot evaluation
    - Zero-shot direct evaluation on target network
-   - Few-shot fine-tuning on target network (10% data budget)
+   - Few-shot fine-tuning on target network (e.g. 10% data budget)
    - Full-budget fine-tuning (100% data budget)
 2. Protocol D: Data Efficiency Scaling Curve
-   - Labeled data fractions: [1%, 5%, 10%, 25%, 50%, 100%]
+   - Labeled data fractions: [1%, 5%, 10%, 25%, 50%, 100%] with monotonically scaled sample counts
    - Pretrained representations vs Training From Scratch (Random Init)
-   - Quantifies label-efficiency gain (e.g., reaching 100% scratch accuracy with 25% data)
+   - Quantifies label-efficiency gain across strictly distinct sample budgets
 3. Outputs JSON benchmark report and CSV summary to results/metrics/
 """
 from __future__ import annotations
@@ -33,13 +34,14 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from src.common.logging import get_logger
-from src.data.dataset_registry import get_manifest
+from src.data.dataset_registry import get_manifest, list_registered_datasets
 from src.data.multi_dataset import SingleDatasetWindowDataset, get_adapter
 from src.forecasting.jepagraph_foundation import (
     FoundationModelConfig,
     JEPAGraphFoundationModel,
 )
 from scripts.finetune_jepagraph import compute_metrics
+from scripts.pretrain_jepagraph import pretrain
 
 logger = get_logger("transfer_benchmark")
 
@@ -52,6 +54,7 @@ def train_eval_probe(
     batch_size: int = 8,
     lr: float = 5e-4,
     device: torch.device = torch.device("cpu"),
+    max_samples: int = 512,
 ) -> Dict[str, Any]:
     """Train probe/model on target dataset partition and evaluate multi-horizon MAE."""
     manifest = get_manifest(target_dataset)
@@ -61,7 +64,7 @@ def train_eval_probe(
         adapter=adapter,
         split="train",
         subsample_ratio=subsample_ratio,
-        max_samples=256,
+        max_samples=max_samples,
     )
     test_ds = SingleDatasetWindowDataset(
         adapter=adapter,
@@ -85,9 +88,10 @@ def train_eval_probe(
             optimizer.zero_grad()
             preds = model.forward(x, adj_tensor, variable_type=manifest.primary_variable)
             valid = m_y.bool()
-            loss = F.smooth_l1_loss(preds[valid], y[valid]) if valid.sum() > 0 else torch.tensor(0.0, device=device)
-            loss.backward()
-            optimizer.step()
+            if valid.sum() > 0:
+                loss = F.smooth_l1_loss(preds[valid], y[valid])
+                loss.backward()
+                optimizer.step()
     dur = time.time() - t0
 
     # Evaluate test
@@ -106,12 +110,11 @@ def train_eval_probe(
     pred_arr = np.concatenate(all_preds, axis=0)
     target_arr = np.concatenate(all_targets, axis=0)
     metrics = compute_metrics(pred_arr, target_arr)
-
     return {
-        "subsample_ratio": subsample_ratio,
-        "train_samples": len(train_ds),
-        "duration_seconds": round(dur, 2),
         "metrics": metrics,
+        "train_samples": len(train_ds),
+        "test_samples": len(test_ds),
+        "train_duration_seconds": round(dur, 2),
     }
 
 
@@ -155,17 +158,29 @@ def run_benchmark(
 ) -> Dict[str, Any]:
     device = torch.device("cpu")
     print("=" * 80)
-    print(f"CROSS-DATASET TRANSFER & DATA EFFICIENCY BENCHMARK")
+    print(f"CROSS-DATASET TRANSFER & DATA EFFICIENCY BENCHMARK V3.0")
     print(f"Target Unseen Network: {target_dataset.upper()}")
     print("=" * 80 + "\n")
 
     config = FoundationModelConfig.tiny()
 
+    # Verify LODO Isolation
+    lodo_isolation_verified = True
+    trained_datasets: List[str] = []
+    if pretrained_ckpt and pretrained_ckpt.exists():
+        ckpt_data = torch.load(pretrained_ckpt, map_location=device)
+        trained_datasets = ckpt_data.get("config", {}).get("datasets", {}).get("mixture", [])
+        if target_dataset in trained_datasets:
+            lodo_isolation_verified = False
+            logger.warning(
+                f"[LODO Audit Warning] Checkpoint '{pretrained_ckpt.name}' previously included target "
+                f"'{target_dataset}' in its mixture! Marking lodo_isolation_verified=False."
+            )
+
     # 1. Zero-shot transfer
     print("[*] Evaluating Zero-Shot Transfer...")
     zero_shot_model = JEPAGraphFoundationModel(config).to(device)
     if pretrained_ckpt and pretrained_ckpt.exists():
-        ckpt_data = torch.load(pretrained_ckpt, map_location=device)
         zero_shot_model.load_state_dict(ckpt_data["model_state_dict"], strict=False)
     zero_shot_metrics = run_zero_shot_eval(zero_shot_model, target_dataset, device)
     print(f"  Zero-shot 15m MAE: {zero_shot_metrics.get('15m', {}).get('mae')} | 60m MAE: {zero_shot_metrics.get('60m', {}).get('mae')}")
@@ -175,8 +190,8 @@ def run_benchmark(
     data_efficiency_results = []
 
     print("\n[*] Evaluating Data Efficiency Scaling Curve...")
-    print(f"{'Budget':>8s} | {'Pretrained 15m MAE':>20s} | {'Scratch 15m MAE':>18s} | {'Gain (%)':>10s}")
-    print("-" * 65)
+    print(f"{'Budget':>8s} | {'Samples':>8s} | {'Pretrained 15m MAE':>20s} | {'Scratch 15m MAE':>18s} | {'Gain (%)':>10s}")
+    print("-" * 75)
 
     for b in budgets:
         # Pretrained model initialization
@@ -193,12 +208,13 @@ def run_benchmark(
         mae_scratch = res_scratch["metrics"]["15m"]["mae"]
         gain_pct = ((mae_scratch - mae_pre) / mae_scratch) * 100.0
 
-        print(f"{b*100:7.0f}% | {mae_pre:18.2f} mph | {mae_scratch:16.2f} mph | {gain_pct:+9.1f}%")
+        n_samples = res_pre["train_samples"]
+        print(f"{b*100:7.0f}% | {n_samples:8d} | {mae_pre:18.2f} mph | {mae_scratch:16.2f} mph | {gain_pct:+9.1f}%")
 
         data_efficiency_results.append({
             "budget_ratio": b,
             "budget_percent": round(b * 100, 1),
-            "train_samples": res_pre["train_samples"],
+            "train_samples": n_samples,
             "pretrained_15m_mae": mae_pre,
             "pretrained_30m_mae": res_pre["metrics"]["30m"]["mae"],
             "pretrained_60m_mae": res_pre["metrics"]["60m"]["mae"],
@@ -211,6 +227,8 @@ def run_benchmark(
     benchmark_summary = {
         "target_dataset": target_dataset,
         "pretrained_checkpoint": str(pretrained_ckpt) if pretrained_ckpt else None,
+        "lodo_isolation_verified": lodo_isolation_verified,
+        "source_pretraining_mixture": trained_datasets,
         "zero_shot_metrics": zero_shot_metrics,
         "data_efficiency_scaling": data_efficiency_results,
     }

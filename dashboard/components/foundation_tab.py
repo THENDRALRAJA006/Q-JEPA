@@ -25,21 +25,21 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 def render_foundation_lab_tab():
-    st.header("🔮 Q-JEPA Traffic Foundation Model Lab (JEPAGraph-FM V2.0)")
-    st.caption("Large-scale spatiotemporal pretraining, graph representation learning, and cross-dataset emergency routing")
+    st.header("🔮 Q-JEPA Traffic Master Foundation Model Lab (JEPAGraph-FM V3.0)")
+    st.caption("Unified spatiotemporal pretraining, adaptive graph learning, and uncertainty-aware emergency routing")
 
     st.markdown("""
     <div style="background: linear-gradient(135deg, #0f172a, #1e1b4b); padding: 1.2rem; border-radius: 12px; border: 1px solid #3b82f6; margin-bottom: 1.5rem;">
-        <h4 style="color: #60a5fa; margin-top: 0;">🌐 Spatiotemporal Traffic Foundation Model Architecture</h4>
+        <h4 style="color: #60a5fa; margin-top: 0;">🌐 Q-JEPA Master Foundation Model Architecture (V3.0)</h4>
         <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 0.5rem;">
-            <b>JEPAGraph-FM</b> evolves from single-dataset highway modeling to a multi-dataset spatiotemporal foundation model. 
-            Combining <b>causal dilated temporal convolutions</b> with <b>variable-size graph diffusion message passing</b> and a 
-            <b>self-supervised EMA target encoder</b>, the architecture learns reusable traffic dynamics across heterogeneous road networks.
+            <b>JEPAGraph-FM V3.0</b> integrates <b>causal gated dilated temporal convolutions</b> with 
+            <b>adaptive graph correlation learning</b>, <b>self-supervised EMA target prediction</b>, 
+            and <b>calibrated aleatoric uncertainty estimation</b> across heterogeneous urban and highway networks.
         </p>
-        <span style="background: #1e3a8a; color: #93c5fd; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Cross-Dataset Pretrained</span> &nbsp;
+        <span style="background: #1e3a8a; color: #93c5fd; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Adaptive Graph Learning</span> &nbsp;
         <span style="background: #065f46; color: #a7f3d0; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Heterogeneous Graph N &in; [170, 883]</span> &nbsp;
-        <span style="background: #701a75; color: #f5d0fe; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Multi-Task SSL</span> &nbsp;
-        <span style="background: #374151; color: #e5e7eb; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Dynamic Ambulance Routing</span>
+        <span style="background: #701a75; color: #f5d0fe; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Calibrated Uncertainty</span> &nbsp;
+        <span style="background: #374151; color: #e5e7eb; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">Arrival-Time Aware Routing</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -61,9 +61,12 @@ def render_foundation_lab_tab():
             miss = dinfo.get("missingness", {})
             train_s = dinfo.get("train_statistics", {})
 
+            provenance = "✅ Real Sensors (CC BY 4.0)" if did == "metr_la" else "⚠️ Procedural Fallback (Zenodo 403)"
+
             d_rows.append({
                 "Dataset ID": did,
                 "Benchmark Name": man.get("name", did),
+                "Provenance Status": provenance,
                 "Variable Type": f"{man.get('primary_variable', '').upper()} ({man.get('variable_units', '')})",
                 "Sensors (N)": shape.get("N", 0),
                 "Timesteps (T)": f"{shape.get('T', 0):,}",
@@ -71,7 +74,6 @@ def render_foundation_lab_tab():
                 "Edge Density": f"{g_diag.get('density', 0.0):.4f}",
                 "Missingness": f"{miss.get('missing_ratio', 0.0)*100:.2f}%",
                 "Train Mean &plusmn; Std": f"{train_s.get('mean', 0.0):.1f} &plusmn; {train_s.get('std', 1.0):.1f}",
-                "License": man.get("license", "CC BY 4.0"),
             })
 
         st.dataframe(pd.DataFrame(d_rows), use_container_width=True, hide_index=True)
@@ -203,6 +205,20 @@ def render_foundation_lab_tab():
         eff_data = trans_data.get("data_efficiency_scaling", [])
         if eff_data:
             df_eff = pd.DataFrame(eff_data)
+            st.dataframe(
+                df_eff[["budget_percent", "train_samples", "pretrained_15m_mae", "scratch_15m_mae", "relative_gain_15m_pct"]].rename(
+                    columns={
+                        "budget_percent": "Budget (%)",
+                        "train_samples": "Train Windows",
+                        "pretrained_15m_mae": "Pretrained 15m MAE (mph)",
+                        "scratch_15m_mae": "Scratch 15m MAE (mph)",
+                        "relative_gain_15m_pct": "Relative Gain (%)",
+                    }
+                ),
+                use_container_width=True,
+                hide_index=True,
+            )
+
             fig_eff = go.Figure()
             fig_eff.add_trace(go.Scatter(x=df_eff["budget_percent"], y=df_eff["pretrained_15m_mae"], mode="lines+markers", name="JEPAGraph-FM (Pretrained)", line=dict(color="#38bdf8", width=3)))
             fig_eff.add_trace(go.Scatter(x=df_eff["budget_percent"], y=df_eff["scratch_15m_mae"], mode="lines+markers", name="Scratch (Random Init)", line=dict(color="#f43f5e", width=2, dash="dash")))

@@ -1,28 +1,25 @@
-# Surakshit Bharat — Q-JEPA Traffic
+# Surakshit Bharat — Q-JEPA Traffic (V3.0 Master Model)
 
 > **Predict Traffic. Protect Lives. Clear the Way.**
 
-[![Tests](https://img.shields.io/badge/tests-33%2F33%20passing-brightgreen)](#testing)
+[![Tests](https://img.shields.io/badge/tests-133%2F133%20passing-brightgreen)](#testing)
 [![Python](https://img.shields.io/badge/python-3.11-blue)](#requirements)
-[![Data](https://img.shields.io/badge/data-synthetic-orange)](#data)
+[![Data](https://img.shields.io/badge/data-real%20METR--LA%20%2B%20sim-green)](#data)
 
-An AI-powered ambulance routing research platform using JEPA-style predictive representations, uncertainty-aware routing, and classical quantum-inspired optimization.
-
-> ⚠️ **All data is synthetically generated. This is a research prototype. Not for operational use.**
+An advanced traffic intelligence and emergency ambulance routing research platform combining the **Q-JEPA Master Foundation Model (V3.0)**, spatial graph representation learning, time-dependent routing, and Google Maps Platform integration.
 
 ---
 
 ## Features
 
-- **30-node synthetic road network** (5×6 grid) with time-varying traffic
-- **7 emergency scenarios**: normal, rush-hour, blockage, queue spillback, missing data, noisy sensors, dynamic rerouting
-- **5 routing algorithms**: Shortest Distance, Current Traffic, Predicted Traffic, Uncertainty-Aware, Quantum-Inspired (SA)
-- **4 forecasting models**: Persistence, Historical Average, LSTM (with MC-Dropout uncertainty), JEPA-Traffic
-- **JEPA-style representation learning**: online/target encoder with EMA updates
-- **7-page Streamlit dashboard**: Command Center, Live Map, Route Comparison, AI Lab, Experiments, System Status, and Google Maps Integration
-- **Google Maps Platform integration**: Live Routes API v2 navigation and Maps JS API visualization with separate keys, rate limiting, and offline fallback
-- **FastAPI REST backend** with full endpoint coverage
-- **129 automated tests** — all passing
+- **Q-JEPA Master Foundation Model (V3.0)**: Spatiotemporal representation learning with causal gated dilated temporal convolutions, learnable adaptive graph adjacency, self-supervised EMA target prediction, and calibrated aleatoric uncertainty estimation
+- **Real Traffic & Multi-Dataset Ingestion**: Real Los Angeles highway sensors (METR-LA: 207 sensors, 34,272 timesteps, CC BY 4.0) with train-only Z-score normalization and honest provenance tracking
+- **Dynamic Time-Dependent Emergency Routing**: Arrival-time-aware edge cost indexing ($h_{\text{arr}} = \text{round}(T_{\text{accum}}/\Delta t)$), risk penalty hedging ($C(e, t) = \text{tt} + \beta \sigma$), and oscillation-dampened dynamic rerouting
+- **7-Page Research Dashboard**: Command Center, Live Map, Route Comparison, AI Lab, Experiments, System Status, and Google Maps Integration
+- **Google Maps Platform Runtime Integration**: Routes API v2 navigation and Maps JS API visualization with strict two-key separation, rate limiting, and offline fallback
+- **FastAPI REST Backend**: Comprehensive endpoints with schemas, secret redaction, and rate guards
+- **133 Automated Tests** — all passing with exit code 0
+- **Audited Reproducibility**: See [docs/V3_SYSTEM_AUDIT.md](docs/V3_SYSTEM_AUDIT.md) and [docs/GOOGLE_MAPS_VERIFICATION.md](docs/GOOGLE_MAPS_VERIFICATION.md)
 
 ---
 

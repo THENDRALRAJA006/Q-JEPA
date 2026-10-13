@@ -1,11 +1,12 @@
 """
-Multi-Objective Self-Supervised Loss Suite for JEPAGraph Foundation Model.
+Multi-Objective Self-Supervised Loss Suite for JEPAGraph Foundation Model V3.0.
 
 Provides:
 - Objective 1: Future latent prediction loss (Smooth L1 in embedding space)
 - Objective 2: Masked spatiotemporal reconstruction loss (reconstructing masked sensors/patches)
 - Objective 3: Supervised forecasting loss (Huber/MAE on valid physical observations)
-- Objective 4: Multiscale temporal consistency loss (optional smoothness penalty)
+- Objective 4: Multiscale temporal consistency loss (smoothness penalty)
+- Objective 5: Calibrated heteroscedastic uncertainty loss (Gaussian NLL on valid observations)
 - ObjectiveSuite: Configurable weighted loss computation and metric decomposition
 """
 from __future__ import annotations
@@ -26,13 +27,14 @@ class LossWeightsConfig:
     w_mask: float = 0.5  # Masked spatiotemporal reconstruction
     w_sup: float = 1.0  # Supervised future forecasting
     w_temp: float = 0.05  # Temporal consistency / smoothness
+    w_unc: float = 0.05  # Calibrated aleatoric uncertainty (Gaussian NLL)
     huber_delta: float = 1.0
 
 
 class RepresentationObjectives(nn.Module):
     """
     Multi-task loss module coordinating JEPA latent prediction,
-    masked sensor reconstruction, and supervised forecasting.
+    masked sensor reconstruction, supervised forecasting, and uncertainty calibration.
     """
 
     def __init__(self, config: Optional[LossWeightsConfig] = None):
@@ -103,11 +105,30 @@ class RepresentationObjectives(nn.Module):
             pred_y[mask], target_y[mask], beta=self.config.huber_delta, reduction="mean"
         )
 
+    def uncertainty_calibration_loss(
+        self,
+        pred_y: torch.Tensor,
+        pred_sigma: torch.Tensor,
+        target_y: torch.Tensor,
+        valid_mask_y: torch.Tensor,
+    ) -> torch.Tensor:
+        """
+        Objective 5: Heteroscedastic Gaussian NLL loss for aleatoric uncertainty calibration.
+        Loss = 0.5 * ( (y - y_hat)^2 / sigma^2 + log(sigma^2) )
+        """
+        mask = valid_mask_y.bool()
+        if mask.sum() == 0:
+            return torch.tensor(0.0, device=pred_y.device)
+
+        diff_sq = torch.square(pred_y[mask] - target_y[mask])
+        var = torch.clamp(torch.square(pred_sigma[mask]), min=1e-4, max=100.0)
+        nll = 0.5 * (diff_sq / var + torch.log(var))
+        return torch.mean(nll)
+
     def temporal_consistency_loss(self, pred_y: torch.Tensor) -> torch.Tensor:
         """
         Objective 4: Temporal smoothness penalty penalizing erratic frame-to-frame jumps.
         """
-        # 1st-order temporal differences across T_out: [B, T_out - 1, N]
         diffs = pred_y[:, 1:, :] - pred_y[:, :-1, :]
         return torch.mean(torch.square(diffs))
 
@@ -145,11 +166,21 @@ class RepresentationObjectives(nn.Module):
 
         l_temp = self.temporal_consistency_loss(model_outputs["pred_forecast"])
 
+        l_unc = torch.tensor(0.0, device=batch_x.device)
+        if "pred_sigma" in model_outputs and self.config.w_unc > 0:
+            l_unc = self.uncertainty_calibration_loss(
+                pred_y=model_outputs["pred_forecast"],
+                pred_sigma=model_outputs["pred_sigma"],
+                target_y=batch_y,
+                valid_mask_y=valid_mask_y,
+            )
+
         total = (
             self.config.w_jepa * l_jepa
             + self.config.w_mask * l_mask
             + self.config.w_sup * l_sup
             + self.config.w_temp * l_temp
+            + self.config.w_unc * l_unc
         )
 
         metrics = {
@@ -158,6 +189,7 @@ class RepresentationObjectives(nn.Module):
             "loss_mask": float(l_mask.item()),
             "loss_sup": float(l_sup.item()),
             "loss_temp": float(l_temp.item()),
+            "loss_unc": float(l_unc.item()),
         }
 
         return total, metrics
