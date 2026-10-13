@@ -1,25 +1,26 @@
-# Surakshit Bharat — Q-JEPA Traffic (V3.0 Master Model)
+# Surakshit Bharat — Q-JEPA Traffic (V3.1 Master Model)
 
 > **Predict Traffic. Protect Lives. Clear the Way.**
 
-[![Tests](https://img.shields.io/badge/tests-133%2F133%20passing-brightgreen)](#testing)
+[![Tests](https://img.shields.io/badge/tests-135%2F135%20passing-brightgreen)](#testing)
 [![Python](https://img.shields.io/badge/python-3.11-blue)](#requirements)
-[![Data](https://img.shields.io/badge/data-real%20METR--LA%20%2B%20sim-green)](#data)
+[![Data](https://img.shields.io/badge/data-real%20METR--LA%20%2B%20PEMS04%20%2B%20PEMS08-green)](#data)
 
-An advanced traffic intelligence and emergency ambulance routing research platform combining the **Q-JEPA Master Foundation Model (V3.0)**, spatial graph representation learning, time-dependent routing, and Google Maps Platform integration.
+An advanced traffic intelligence and emergency ambulance routing research platform combining the **Q-JEPA Master Foundation Model (V3.1)**, spatial graph representation learning, time-dependent routing, and Google Maps Platform integration.
 
 ---
 
 ## Features
 
-- **Q-JEPA Master Foundation Model (V3.0)**: Spatiotemporal representation learning with causal gated dilated temporal convolutions, learnable adaptive graph adjacency, self-supervised EMA target prediction, and calibrated aleatoric uncertainty estimation
-- **Real Traffic & Multi-Dataset Ingestion**: Real Los Angeles highway sensors (METR-LA: 207 sensors, 34,272 timesteps, CC BY 4.0) with train-only Z-score normalization and honest provenance tracking
+- **Q-JEPA Master Foundation Model (V3.1)**: Spatiotemporal representation learning with causal gated dilated temporal convolutions, learnable adaptive graph adjacency, self-supervised EMA target prediction, and calibrated aleatoric uncertainty estimation
+- **Verified Multi-Dataset Real Traffic**: Authentic Caltrans highway sensors on disk: METR-LA (207 sensors, 34,272 timesteps, speed in mph), PEMS04 (307 sensors, 16,992 timesteps, flow/speed), and PEMS08 (170 sensors, 17,856 timesteps, flow/speed)
+- **Leave-One-Dataset-Out (LODO) Pretraining**: Pretrained on real PEMS04 and PEMS08 while strictly holding out METR-LA (`lodo_isolation_verified: true`)
 - **Dynamic Time-Dependent Emergency Routing**: Arrival-time-aware edge cost indexing ($h_{\text{arr}} = \text{round}(T_{\text{accum}}/\Delta t)$), risk penalty hedging ($C(e, t) = \text{tt} + \beta \sigma$), and oscillation-dampened dynamic rerouting
 - **7-Page Research Dashboard**: Command Center, Live Map, Route Comparison, AI Lab, Experiments, System Status, and Google Maps Integration
-- **Google Maps Platform Runtime Integration**: Routes API v2 navigation and Maps JS API visualization with strict two-key separation, rate limiting, and offline fallback
+- **Google Maps Platform Runtime Integration**: Routes API v2 navigation and Maps JS API visualization with strict two-key separation, rate limiting, and graceful offline fallback
 - **FastAPI REST Backend**: Comprehensive endpoints with schemas, secret redaction, and rate guards
-- **133 Automated Tests** — all passing with exit code 0
-- **Audited Reproducibility**: See [docs/V3_SYSTEM_AUDIT.md](docs/V3_SYSTEM_AUDIT.md) and [docs/GOOGLE_MAPS_VERIFICATION.md](docs/GOOGLE_MAPS_VERIFICATION.md)
+- **135 Automated Tests** — all passing with exit code 0
+- **Audited Reproducibility**: See [docs/V3_SYSTEM_AUDIT.md](docs/V3_SYSTEM_AUDIT.md), [docs/MULTI_DATASET_PRETRAINING.md](docs/MULTI_DATASET_PRETRAINING.md), and [docs/GOOGLE_MAPS_VERIFICATION.md](docs/GOOGLE_MAPS_VERIFICATION.md)
 
 ---
 
@@ -161,12 +162,16 @@ Decoding Head trained separately: z_ctx ──▶ speed forecast.
 ---
 
 ## Data Sources
-
-| Dataset | Status | Notes |
-|---------|--------|-------|
-| Synthetic (this project) | ✅ Generated | 30-node grid, 288 time steps |
-| METR-LA | ❌ Not downloaded | Uber/Li et al. 2018 |
-| PeMS-BAY | ❌ Not downloaded | Caltrans/DCRNN |
+ 
+| Dataset | Status on Disk | Type | Notes |
+|---------|:--------------:|:----:|-------|
+| **METR-LA** | ✅ Verified (69.11 MB) | Real Sensor | 207 loop detectors, 34,272 timesteps, speed in mph (CC BY 4.0) |
+| **PEMS04** | ✅ Verified (31.43 MB) | Real Sensor | 307 loop detectors, 16,992 timesteps, flow/speed (Open Data) |
+| **PEMS08** | ✅ Verified (17.67 MB) | Real Sensor | 170 loop detectors, 17,856 timesteps, flow/speed (Open Data) |
+| **PEMS-BAY** | ⚠️ Synthetic Profile | Procedural | Download blocked by remote Zenodo 403; unit testing only |
+| **PEMS03** | ⚠️ Synthetic Profile | Procedural | Download blocked by remote Zenodo 403; unit testing only |
+| **PEMS07** | ⚠️ Synthetic Profile | Procedural | Download blocked by remote Zenodo 403; unit testing only |
+| **Synthetic Grid** | ✅ Generated (Parquet/CSV)| Simulation | 30-node urban road network for ambulance routing benchmarks |
 
 ---
 
@@ -176,4 +181,4 @@ MIT License — see [LICENSE](LICENSE)
 
 ---
 
-*Surakshit Bharat Q-JEPA Traffic — Research Prototype v0.1.0*
+*Surakshit Bharat Q-JEPA Traffic — Research Prototype v3.1.0*

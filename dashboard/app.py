@@ -30,6 +30,7 @@ from src.simulation.road_network import RoadNetwork
 from src.simulation.traffic_simulator import TrafficSimulator, ScenarioType
 from src.routing.shortest_path import compare_all_routes, RouterType
 from src.common.config import config, abs_path
+from src.common.logging import get_logger
 from dashboard.components.sota_tab import render_sota_comparison_tab
 from dashboard.components.foundation_tab import render_foundation_lab_tab
 from dashboard.components.google_maps_tab import render_google_maps_tab

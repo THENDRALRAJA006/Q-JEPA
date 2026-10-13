@@ -50,7 +50,7 @@ All datasets were audited for physical filesystem presence, byte size, sensor co
 
 | Dataset ID | Formal Benchmark Name | Real on Disk | File Path | File Size | Sensors ($N$) | Timesteps ($T$) | Target Variable | Units | License |
 | :--- | :--- | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **`metr_la`** | METR-LA LA Freeway Speed | **YES** | `data/metr_la/metr_la.csv` | 69.11 MB | 207 | 34,272 | Speed | mph | CC BY 4.0 |
+| **`metr_la`** | METR-LA LA Freeway Speed | **YES** | `data/metr_la/METR-LA.csv` | 69.11 MB | 207 | 34,272 | Speed | mph | CC BY 4.0 |
 | **`pems04`** | PEMS04 D4 SF Bay Area Flow | **YES** | `data/pems04/PEMS04.npz` | 31.43 MB | 307 | 16,992 | Flow / Speed | veh/5min | Caltrans Open Data |
 | **`pems08`** | PEMS08 D8 San Bernardino Flow| **YES** | `data/pems08/PEMS08.npz` | 17.67 MB | 170 | 17,856 | Flow / Speed | veh/5min | Caltrans Open Data |
 | **`pems_bay`** | PEMS-BAY South Bay Speed | **NO** (Blocked) | Synthetic Profile | N/A | 325 | 52,116 | Speed | mph | Zenodo 403 Forbidden |
