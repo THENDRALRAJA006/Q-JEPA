@@ -1,0 +1,9 @@
+# Ensure binary files are not corrupted by line-ending conversions
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.parquet binary
+*.pkl binary
+*.npz binary
+*.pt binary
